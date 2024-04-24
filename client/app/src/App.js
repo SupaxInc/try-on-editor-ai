@@ -1,10 +1,13 @@
 import './App.css';
 import TryonEditor from './pages/try-on-editor/TryonEditor';
+import { Routes, Route } from 'react-router-dom';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <TryonEditor />
+    <div>
+      <Routes>
+        <Route path='/' element={ <TryonEditor /> } />
+      </Routes>
     </div>
   );
 }
