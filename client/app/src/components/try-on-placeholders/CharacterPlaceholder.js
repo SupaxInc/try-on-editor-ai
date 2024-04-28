@@ -16,7 +16,7 @@ const CharacterPlaceholder = ({ sprite }) => {
                 backgroundColor: 0x1099bb,
             });
             
-            // Only append canvas is appRef is empty
+            // Only append canvas if appRef is empty
             if (!appRef.current) { 
                 charContainerRef.current.appendChild(app.canvas);
                 appRef.current = app;
@@ -26,7 +26,7 @@ const CharacterPlaceholder = ({ sprite }) => {
         renderCharContainer();
         return () => {
             if (appRef.current) {
-                appRef.current.destroy(true, true);
+                appRef.current.destroy(true);
             }
         };
     }, []);
