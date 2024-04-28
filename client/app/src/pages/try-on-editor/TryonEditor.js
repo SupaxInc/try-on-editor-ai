@@ -4,7 +4,7 @@ import CharacterPlaceholder from '../../components/try-on-placeholders/Character
 
 const TryonEditor = () => {
     const [charSprite, setCharSprite] = useState(null);
-
+    
     const uploadImage = (event) => {
         const file = event.target.files[0];
         if (!file) return;
@@ -16,7 +16,7 @@ const TryonEditor = () => {
             img.onload = () => {
                 const texture = Texture.from(img);
                 const sprite = new Sprite(texture);
-
+            
                 setCharSprite(sprite);            
             };
         };

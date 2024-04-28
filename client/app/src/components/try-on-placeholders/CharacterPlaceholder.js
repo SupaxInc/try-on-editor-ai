@@ -4,25 +4,32 @@ import PropTypes from 'prop-types';
 import { Application, Sprite } from 'pixi.js';
 
 const CharacterPlaceholder = ({ sprite }) => {
-    const charContainer = useRef(null);
+    const charContainerRef = useRef(null);
     const appRef = useRef(null);
 
     useEffect(() => {
-        async function renderCharContainer() {
+        const renderCharContainer = async () => {
             const app = new Application();
-            
             await app.init({
                 width: 800,
                 height: 600,
                 backgroundColor: 0x1099bb,
             });
             
-            charContainer.current.appendChild(app.canvas);
-            appRef.current = app;
+            // Only append canvas is appRef is empty
+            if (!appRef.current) { 
+                charContainerRef.current.appendChild(app.canvas);
+                appRef.current = app;
+            }
         } 
-        
+
         renderCharContainer();
-    }, [appRef]);
+        return () => {
+            if (appRef.current) {
+                appRef.current.destroy(true, true);
+            }
+        };
+    }, []);
 
     useEffect(() => {
         if (appRef.current && sprite) {
@@ -86,7 +93,7 @@ const CharacterPlaceholder = ({ sprite }) => {
     };
 
     return (
-        <div ref={charContainer} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <div ref={charContainerRef} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         </div>
     )
 }
