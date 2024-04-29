@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { Application, Sprite } from 'pixi.js';
-import { makeSpriteInteractive } from '../../interactive';
+import { makeSpriteInteractive } from '../../interaction/helper';
 
 const CharacterPlaceholder = ({ sprite }) => {
     const charContainerRef = useRef(null);

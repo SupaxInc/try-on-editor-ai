@@ -16,8 +16,9 @@ const TryonEditor = () => {
             img.onload = () => {
                 const texture = Texture.from(img);
                 const sprite = new Sprite(texture);
+                sprite.anchor.set(0.5);
             
-                setCharSprite(sprite);            
+                setCharSprite(sprite);               
             };
         };
         reader.readAsDataURL(file);
