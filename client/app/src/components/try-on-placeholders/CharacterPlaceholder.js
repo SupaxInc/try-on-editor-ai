@@ -35,6 +35,7 @@ const CharacterPlaceholder = ({ sprite }) => {
     useEffect(() => {
         if (appRef.current && sprite) {
             appRef.current.stage.addChild(sprite);
+            // Putting image to the middle
             sprite.x = appRef.current.screen.width / 2;
             sprite.y = appRef.current.screen.height / 2;
             makeSpriteInteractive(sprite);
