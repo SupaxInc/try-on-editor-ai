@@ -49,7 +49,6 @@ const TryonEditor = () => {
     return (
         <div>
             <input type="file" onChange={uploadCharacter} />
-            <input type="file" onChange={uploadItems} />
             <button onClick={() => setShowWardrobe(!showWardrobe)}>Toggle Items</button>
             <div className='flex justify-center items-center h-screen'>
                 <div className='w-full'>
@@ -57,7 +56,12 @@ const TryonEditor = () => {
                         <CharacterPlaceholder sprite={charSprite} />
                     </div>
                     <div>
-                        {showWardrobe ?? <ItemsPlaceholder sprites={itemSprites} />}
+                        {showWardrobe && (
+                            <>
+                                <input type="file" onChange={uploadItems} />
+                                <ItemsPlaceholder sprites={itemSprites} />
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { Application, Sprite } from 'pixi.js';
-import { makeSpriteInteractive } from '../../interaction/helper';
 
 const ItemsPlaceholder = ({ sprites }) => {
     const itemsContainerRef = useRef(null);
@@ -13,7 +12,7 @@ const ItemsPlaceholder = ({ sprites }) => {
             const app = new Application();
             await app.init({
                 width: 800,
-                height: 600,
+                height: 200,
                 backgroundColor: 0x1099bb,
             });
             
