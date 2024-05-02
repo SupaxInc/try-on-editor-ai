@@ -47,23 +47,22 @@ const TryonEditor = () => {
     };
 
     return (
-        <div>
-            <input type="file" onChange={uploadCharacter} />
-            <button onClick={() => setShowWardrobe(!showWardrobe)}>Toggle Items</button>
-            <div className='flex justify-center items-center h-screen'>
-                <div className='w-full'>
-                    <div className='mb-4'>
-                        <CharacterPlaceholder sprite={charSprite} />
-                    </div>
-                    <div>
-                        {showWardrobe && (
-                            <>
-                                <input type="file" onChange={uploadItems} />
-                                <ItemsPlaceholder sprites={itemSprites} />
-                            </>
-                        )}
-                    </div>
+        <div className='flex flex-col items-center h-screen'>
+            <div className='flex w-full justify-center p-4 bg-gray-100'>
+                <input type="file" onChange={uploadCharacter} className="mr-4" />
+                <button onClick={() => setShowWardrobe(!showWardrobe)} className="px-4 py-2 bg-blue-500 text-white rounded-lg">Toggle Items</button>
+            </div>
+            
+            <div className='flex flex-col justify-center items-center flex-grow'>
+                <div className='w-full mb-4 flex justify-center'>
+                    <CharacterPlaceholder sprite={charSprite} />
                 </div>
+                {showWardrobe && (
+                    <div className='w-full flex flex-col items-center'>
+                        <input type="file" onChange={uploadItems} className="mb-4" />
+                        <ItemsPlaceholder sprites={itemSprites} />
+                    </div>
+                )}
             </div>
         </div>
     );
