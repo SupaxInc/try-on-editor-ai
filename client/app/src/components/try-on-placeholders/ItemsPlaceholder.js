@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import { Application, Sprite } from 'pixi.js';
 import { makeSpriteInteractive } from '../../interaction/helper';
 
-const CharacterPlaceholder = ({ sprite }) => {
-    const charContainerRef = useRef(null);
+const ItemsPlaceholder = ({ sprites }) => {
+    const itemsContainerRef = useRef(null);
     const appRef = useRef(null);
 
     useEffect(() => {
-        const renderCharContainer = async () => {
+        const renderItemsContainer = async () => {
             const app = new Application();
             await app.init({
                 width: 800,
@@ -19,12 +19,12 @@ const CharacterPlaceholder = ({ sprite }) => {
             
             // Only append canvas if appRef is empty
             if (!appRef.current) { 
-                charContainerRef.current.appendChild(app.canvas);
+                itemsContainerRef.current.appendChild(app.canvas);
                 appRef.current = app;
             }
         } 
 
-        renderCharContainer();
+        renderItemsContainer();
         return () => {
             if (appRef.current) {
                 appRef.current.destroy(true);
@@ -32,24 +32,14 @@ const CharacterPlaceholder = ({ sprite }) => {
         };
     }, []);
 
-    useEffect(() => {
-        if (appRef.current && sprite) {
-            appRef.current.stage.addChild(sprite);
-            // Putting image to the middle
-            sprite.x = appRef.current.screen.width / 2;
-            sprite.y = appRef.current.screen.height / 2;
-            makeSpriteInteractive(sprite);
-        }
-    }, [sprite]);
-
     return (
-        <div ref={charContainerRef} className='flex justify-center items-center h-screen'>
+        <div ref={itemsContainerRef}>
         </div>
     )
 }
 
-CharacterPlaceholder.propTypes = {
-    sprite: PropTypes.instanceOf(Sprite)
+ItemsPlaceholder.propTypes = {
+    sprites: PropTypes.arrayOf(Sprite)
 };
 
-export default CharacterPlaceholder;
+export default ItemsPlaceholder;
