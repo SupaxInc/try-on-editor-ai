@@ -53,12 +53,12 @@ const TryonEditor = () => {
                 <button onClick={() => setShowWardrobe(!showWardrobe)} className="px-4 py-2 bg-blue-500 text-white rounded-lg">Toggle Items</button>
             </div>
             
-            <div className='flex flex-col justify-center items-center flex-grow'>
-                <div className='w-full mb-4 flex justify-center'>
+            <div className='flex flex-col justify-between items-center flex-grow'>
+                <div className='w-full flex justify-center'>
                     <CharacterPlaceholder sprite={charSprite} />
                 </div>
                 {showWardrobe && (
-                    <div className='w-full flex flex-col items-center'>
+                    <div className='w-full flex flex-col items-center mb-4'>
                         <input type="file" onChange={uploadItems} className="mb-4" />
                         <ItemsPlaceholder sprites={itemSprites} />
                     </div>
