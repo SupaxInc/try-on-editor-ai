@@ -52,8 +52,14 @@ const TryonEditor = () => {
             <input type="file" onChange={uploadItems} />
             <button onClick={() => setShowWardrobe(!showWardrobe)}>Toggle Items</button>
             <div className='flex justify-center items-center h-screen'>
-                <CharacterPlaceholder sprite={charSprite} />
-                {showWardrobe ?? <ItemsPlaceholder sprites={itemSprites} />}
+                <div className='w-full'>
+                    <div className='mb-4'>
+                        <CharacterPlaceholder sprite={charSprite} />
+                    </div>
+                    <div>
+                        {showWardrobe ?? <ItemsPlaceholder sprites={itemSprites} />}
+                    </div>
+                </div>
             </div>
         </div>
     );
