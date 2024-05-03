@@ -40,7 +40,7 @@ const TryonEditor = () => {
                 const sprite = new Sprite(texture);
                 sprite.anchor.set(0.5);
             
-                setItemSprites([...itemSprites, sprite])               
+                setItemSprites(prevItemSprites => [...prevItemSprites, sprite])               
             };
         };
         reader.readAsDataURL(file);

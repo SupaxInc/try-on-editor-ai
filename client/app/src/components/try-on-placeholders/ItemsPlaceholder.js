@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { Application, Sprite } from 'pixi.js';
+import { makeSpriteInteractive } from '../../interaction/helper';
 
 const ItemsPlaceholder = ({ sprites }) => {
     const itemsContainerRef = useRef(null);
@@ -30,6 +31,18 @@ const ItemsPlaceholder = ({ sprites }) => {
             }
         };
     }, []);
+
+    useEffect(() => {
+        if (appRef.current) {
+            sprites.forEach(sprite => {
+                appRef.current.stage.addChild(sprite);
+                // Putting image to the middle
+                sprite.x = appRef.current.screen.width / 2;
+                sprite.y = appRef.current.screen.height / 2;
+                makeSpriteInteractive(sprite);
+            });
+        }
+    }, [sprites]);
 
     return (
         <div ref={itemsContainerRef}>
