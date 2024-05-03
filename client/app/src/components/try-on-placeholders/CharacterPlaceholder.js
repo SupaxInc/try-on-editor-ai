@@ -1,27 +1,31 @@
 import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import { Application, Sprite } from 'pixi.js';
+import { Application, Sprite, Container } from 'pixi.js';
 import { makeSpriteInteractive } from '../../interaction/helper';
 
-const CharacterPlaceholder = ({ sprite }) => {
-    const charContainerRef = useRef(null);
+const CharacterPlaceholder = ({ charSprite }) => {
+    const containerRef = useRef(null);
     const appRef = useRef(null);
+    const charContainerRef = useRef(null);
+    const wardrobeContainerRef = useRef(null);
 
     useEffect(() => {
         const renderCharContainer = async () => {
             const app = new Application();
             await app.init({
-                width: 800,
-                height: 600,
+                width: 900,
+                height: 900,
                 backgroundColor: 0x1099bb,
             });
             
             // Only append canvas if appRef is empty
             if (!appRef.current) { 
-                charContainerRef.current.appendChild(app.canvas);
+                containerRef.current.appendChild(app.canvas);
                 appRef.current = app;
             }
+
+            initializePlaceholderContainers(app);
         } 
 
         renderCharContainer();
@@ -33,23 +37,38 @@ const CharacterPlaceholder = ({ sprite }) => {
     }, []);
 
     useEffect(() => {
-        if (appRef.current && sprite) {
-            appRef.current.stage.addChild(sprite);
-            // Putting image to the middle
-            sprite.x = appRef.current.screen.width / 2;
-            sprite.y = appRef.current.screen.height / 2;
-            makeSpriteInteractive(sprite);
+        if (appRef.current && charSprite) {
+            charContainerRef.current.addChild(charSprite);
+            console.log(charContainerRef);
+            // Putting image to the middle and adding interactions
+            charSprite.x = appRef.current.screen.width / 2;
+            charSprite.y = appRef.current.screen.height / 2;
+            makeSpriteInteractive(charSprite);
         }
-    }, [sprite]);
+    }, [charSprite]);
+
+    const initializePlaceholderContainers = (app) => {
+        const characterContainer = new Container();
+        const wardrobeContainer = new Container();
+
+        characterContainer.label = 'characterContainer';
+        app.stage.addChild(characterContainer);
+        charContainerRef.current = appRef.current.stage.getChildByLabel('characterContainer');
+        console.log(charContainerRef);
+
+        wardrobeContainer.label = 'wardrobeContainer';
+        app.stage.addChild(wardrobeContainer);
+        wardrobeContainerRef.current = appRef.current.stage.getChildByLabel('wardrobeContainer');
+    };
 
     return (
-        <div ref={charContainerRef} className='flex justify-center items-center h-screen'>
+        <div ref={containerRef}>
         </div>
     )
 }
 
 CharacterPlaceholder.propTypes = {
-    sprite: PropTypes.instanceOf(Sprite)
+    charSprite: PropTypes.instanceOf(Sprite)
 };
 
 export default CharacterPlaceholder;

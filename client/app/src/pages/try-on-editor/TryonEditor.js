@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Texture, Sprite } from 'pixi.js';
+
 import CharacterPlaceholder from '../../components/try-on-placeholders/CharacterPlaceholder';
-import ItemsPlaceholder from '../../components/try-on-placeholders/ItemsPlaceholder';
 import { createSpriteFromFile } from './helper';
 
 const TryonEditor = () => {
@@ -33,13 +32,12 @@ const TryonEditor = () => {
             </div>
             
             <div className='flex flex-col justify-between items-center flex-grow'>
-                <div className='w-full flex justify-center'>
-                    <CharacterPlaceholder sprite={charSprite} />
+                <div className='w-full flex justify-center p-4'>
+                    <CharacterPlaceholder charSprite={charSprite} />
                 </div>
                 {showWardrobe && (
                     <div className='w-full flex flex-col items-center mb-4'>
                         <input type="file" onChange={uploadItems} className="mb-4" />
-                        <ItemsPlaceholder sprites={itemSprites} />
                     </div>
                 )}
             </div>
