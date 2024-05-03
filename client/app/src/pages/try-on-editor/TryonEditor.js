@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Texture, Sprite } from 'pixi.js';
 import CharacterPlaceholder from '../../components/try-on-placeholders/CharacterPlaceholder';
 import ItemsPlaceholder from '../../components/try-on-placeholders/ItemsPlaceholder';
+import { createSpriteFromFile } from './helper';
 
 const TryonEditor = () => {
     const [charSprite, setCharSprite] = useState(null);
@@ -12,38 +13,16 @@ const TryonEditor = () => {
         const file = event.target.files[0];
         if (!file) return;
     
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const img = new Image();
-            img.src = e.target.result;
-            img.onload = () => {
-                const texture = Texture.from(img);
-                const sprite = new Sprite(texture);
-                sprite.anchor.set(0.5);
-            
-                setCharSprite(sprite);               
-            };
-        };
-        reader.readAsDataURL(file);
+        createSpriteFromFile(file, setCharSprite)
     };
 
     const uploadItems = (event) => {
         const file = event.target.files[0];
         if (!file) return;
     
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const img = new Image();
-            img.src = e.target.result;
-            img.onload = () => {
-                const texture = Texture.from(img);
-                const sprite = new Sprite(texture);
-                sprite.anchor.set(0.5);
-            
-                setItemSprites(prevItemSprites => [...prevItemSprites, sprite])               
-            };
-        };
-        reader.readAsDataURL(file);
+        createSpriteFromFile(file, sprite => {
+            setItemSprites(prevItemSprites => [...prevItemSprites, sprite]);
+        });
     };
 
     return (
