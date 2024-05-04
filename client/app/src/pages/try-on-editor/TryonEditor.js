@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import CharacterPlaceholder from '../../components/try-on-placeholders/CharacterPlaceholder';
 import { createSpriteFromFile } from './helper';
+import PixiApp from '../../pixi/PixiApp';
 
 const TryonEditor = () => {
     const [charSprite, setCharSprite] = useState(null);
@@ -33,7 +34,9 @@ const TryonEditor = () => {
             
             <div className='flex flex-col justify-between items-center flex-grow'>
                 <div className='w-full flex justify-center p-4'>
-                    <CharacterPlaceholder charSprite={charSprite} />
+                    <PixiApp>
+                        <CharacterPlaceholder charSprite={charSprite} />
+                    </PixiApp>
                 </div>
                 {showWardrobe && (
                     <div className='w-full flex flex-col items-center mb-4'>
