@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { Sprite } from 'pixi.js';
@@ -16,7 +16,7 @@ const CharacterPlaceholder = ({ charSprite }) => {
             charSprite.y = appRef.current.screen.height / 2;
             makeSpriteInteractive(charSprite);
         }
-    }, [charSprite]);
+    }, [charSprite, appRef, charContainerRef]);
 
     return null; // No DOM output
 }

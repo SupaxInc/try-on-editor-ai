@@ -9,7 +9,23 @@ const PixiApp = ({ children }) => {
     const charContainerRef = useRef(null);
     const wardrobeContainerRef = useRef(null);
 
+
     useEffect(() => {
+        const initializePlaceholderContainers = (app) => {
+            const characterContainer = new Container();
+            const wardrobeContainer = new Container();
+    
+            characterContainer.label = 'characterContainer';
+            app.stage.addChild(characterContainer);
+            charContainerRef.current = appRef.current.stage.getChildByLabel('characterContainer');
+            setCharContainerRef(charContainerRef);
+    
+            wardrobeContainer.label = 'wardrobeContainer';
+            app.stage.addChild(wardrobeContainer);
+            wardrobeContainerRef.current = appRef.current.stage.getChildByLabel('wardrobeContainer');
+            setWardrobeContainerRef(wardrobeContainerRef);
+        };
+
         const renderApp = async () => {
             const app = new Application();
             await app.init({
@@ -17,7 +33,7 @@ const PixiApp = ({ children }) => {
                 height: 900,
                 backgroundColor: 0x1099bb,
             });
-            
+
             // Only append canvas if appRef is empty
             if (!appRef.current) { 
                 containerRef.current.appendChild(app.canvas);
@@ -34,22 +50,7 @@ const PixiApp = ({ children }) => {
                 appRef.current.destroy(true);
             }
         };
-    }, []);
-
-    const initializePlaceholderContainers = (app) => {
-        const characterContainer = new Container();
-        const wardrobeContainer = new Container();
-
-        characterContainer.label = 'characterContainer';
-        app.stage.addChild(characterContainer);
-        charContainerRef.current = appRef.current.stage.getChildByLabel('characterContainer');
-        setCharContainerRef(charContainerRef);
-
-        wardrobeContainer.label = 'wardrobeContainer';
-        app.stage.addChild(wardrobeContainer);
-        wardrobeContainerRef.current = appRef.current.stage.getChildByLabel('wardrobeContainer');
-        setWardrobeContainerRef(wardrobeContainerRef);
-    };
+    }, [setCharContainerRef, setWardrobeContainerRef, setAppRef]);
 
     return (
         <div ref={containerRef}>
