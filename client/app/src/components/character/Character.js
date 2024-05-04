@@ -5,7 +5,7 @@ import { Sprite } from 'pixi.js';
 import { makeSpriteInteractive } from '../../interaction/helper';
 import { usePixi } from '../../pixi/contexts/PixiContext';
 
-const CharacterPlaceholder = ({ charSprite }) => {
+const Character = ({ charSprite }) => {
     const { appRef, charContainerRef } = usePixi();
 
     useEffect(() => {
@@ -21,8 +21,8 @@ const CharacterPlaceholder = ({ charSprite }) => {
     return null; // No DOM output
 }
 
-CharacterPlaceholder.propTypes = {
+Character.propTypes = {
     charSprite: PropTypes.instanceOf(Sprite)
 };
 
-export default CharacterPlaceholder;
+export default Character;

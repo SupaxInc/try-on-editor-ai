@@ -5,8 +5,6 @@ import { Container, Sprite } from 'pixi.js';
 import { usePixi } from '../../pixi/contexts/PixiContext';
 import { makeSpriteInteractive } from '../../interaction/helper';
 
-// TODO: Figure out what to do with ItemPlaceholder.js
-
 const Wardrobe = ({ itemSprites }) => {
     const { wardrobeContainerRef } = usePixi();
 
