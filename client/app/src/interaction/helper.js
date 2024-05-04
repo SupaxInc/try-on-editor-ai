@@ -1,8 +1,8 @@
 import { RESIZE_AREA_CORNER, RESIZE_AREA_MIN } from "./constants";
 
 // TODO: Resizing is still a little jumpy
-// TODO: Resizing is still a little jumpy
-// TODO: Resizing is still a little jumpy
+// TODO: Resizing stopped working after adding containers, check pointer position relative to sprites parent
+// TODO: Need to add boundaries to containers
 
 export const makeSpriteInteractive = (sprite) => {
     sprite.interactive = true;  // Allow sprite to interact with pointer events

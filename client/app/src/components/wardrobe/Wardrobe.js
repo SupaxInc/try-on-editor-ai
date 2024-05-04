@@ -15,7 +15,6 @@ const Wardrobe = ({ itemSprites }) => {
     
             itemSprites.forEach((sprite) => {
                 makeSpriteInteractive(sprite);
-                sprite.x = 100;
                 itemsContainer.addChild(sprite);
             });
     
@@ -27,10 +26,6 @@ const Wardrobe = ({ itemSprites }) => {
 
             // Add items container to the app stage as child of wardrobeContainer (wardrobe container already added to app stage)
             wardrobeContainerRef.current.addChild(itemsContainer);
-
-            return () => {
-                wardrobeContainerRef.removeChildren();
-            }
         }
     }, [wardrobeContainerRef, itemSprites]);
 

@@ -17,11 +17,15 @@ const PixiApp = ({ children }) => {
     
             characterContainer.label = 'characterContainer';
             app.stage.addChild(characterContainer);
+            characterContainer.x = app.screen.width / 2;
+            characterContainer.y = 0;
             charContainerRef.current = appRef.current.stage.getChildByLabel('characterContainer');
             setCharContainerRef(charContainerRef);
     
             wardrobeContainer.label = 'wardrobeContainer';
             app.stage.addChild(wardrobeContainer);
+            wardrobeContainer.x = app.screen.width / 2;
+            wardrobeContainer.y = app.screen.height - 150;
             wardrobeContainerRef.current = appRef.current.stage.getChildByLabel('wardrobeContainer');
             setWardrobeContainerRef(wardrobeContainerRef);
         };
