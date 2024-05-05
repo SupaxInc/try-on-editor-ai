@@ -26,11 +26,11 @@ const Wardrobe = ({ itemSprites }) => {
         
         // Containers scales its resolution based on its children, so use graphics to create boundaries for wardrobe
         const setWardrobeBounds = () => {
-            const bg = new Graphics();
+            const boundary = new Graphics();
             const wardrobeWidth = appRef.current.screen.width // Full width of app canvas
             const wardrobeHeight = appRef.current.screen.height * 0.2; // Remaining 20% of the height at the bottom
-            bg.rect(0, 0, wardrobeWidth, wardrobeHeight);
-            bg.fill({color: 0x333333, alpha: 1});
+            boundary.rect(0, 0, wardrobeWidth, wardrobeHeight);
+            boundary.fill({color: 0x333333, alpha: 1});
 
             // (0,0) origin is top left of canvas
                 // Imagine the wardrobe rectangle where origin is top left (0,0)
@@ -39,7 +39,7 @@ const Wardrobe = ({ itemSprites }) => {
             // Position y to start at wardrobe height - the app canvas's screen height, so it starts 80% of screen
             wardrobeContainerRef.current.y = appRef.current.screen.height - wardrobeContainerRef.current.height;
 
-            return bg;
+            return boundary;
         }
         
         if (appRef && wardrobeContainerRef.current) {

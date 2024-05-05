@@ -13,20 +13,22 @@ const Character = ({ charSprite }) => {
     useEffect(() => {
         // Containers scales its resolution based on its children, so use graphics to create boundaries for character
         const setCharacterBounds = () => {
-            const bg = new Graphics();
+            const boundary = new Graphics();
             const charWidth = appRef.current.screen.width
             const charHeight = appRef.current.screen.height * 0.8; // Remaining 80% of the height at the bottom
-            bg.rect(0, 0, charWidth, charHeight);
-            bg.fill({color: 0xFFFFFF, alpha: 1});
-            bg.stroke({width: 2, color: 0xFF0000, alpha: 1});
+            boundary.rect(0, 0, charWidth, charHeight);
+            boundary.fill({color: 0xFFFFFF, alpha: 1});
+            boundary.stroke({width: 2, color: 0xFF0000, alpha: 1});
 
             // Position x to left of canvas (parent)
             charContainerRef.current.x = 0;
             // Position y to start at the top of the canvas
             charContainerRef.current.y = 0;
             // Positions combination with height and width of container creates a rectangle covering 80% of canvas
+
+            return boundary;
         }
-        
+
         if (appRef && charContainerRef.current) {
             const boundary = setCharacterBounds();
            
