@@ -6,6 +6,7 @@ import { usePixi } from '../../pixi/contexts/PixiContext';
 import { makeSpriteInteractive } from '../../pixi/utils/interactions';
 
 // TODO: Make graphics more performant
+// TODO: Make item sprites scale to new boundaries
 
 const Wardrobe = ({ itemSprites }) => {
     const { wardrobeContainerRef, appRef } = usePixi();
@@ -31,9 +32,11 @@ const Wardrobe = ({ itemSprites }) => {
             bg.rect(0, 0, wardrobeWidth, wardrobeHeight);
             bg.fill({color: 0x333333, alpha: 1});
 
-            // Position x to bottom left of screen
+            // (0,0) origin is top left of canvas
+                // Imagine the wardrobe rectangle where origin is top left (0,0)
+            // Position x to start at left of canvas
             wardrobeContainerRef.current.x = 0; 
-            // Position y to be wardrobe height - the app canvas's screen height, perfectly aligns to bottom of screen
+            // Position y to start at wardrobe height - the app canvas's screen height, so it starts 80% of screen
             wardrobeContainerRef.current.y = appRef.current.screen.height - wardrobeContainerRef.current.height;
 
             return bg;
@@ -41,7 +44,7 @@ const Wardrobe = ({ itemSprites }) => {
         
         if (appRef && wardrobeContainerRef.current) {
             const boundary = setWardrobeBounds();
-            
+
             wardrobeContainerRef.current.addChild(boundary);
             if (itemSprites.length > 0) {
                 const itemsContainer = createItemsContainer();
