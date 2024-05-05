@@ -25,18 +25,12 @@ const PixiApp = ({ children }) => {
             const characterContainer = new Container();
             characterContainer.label = 'characterContainer';
             app.stage.addChild(characterContainer);
-            
-            characterContainer.x = app.screen.width / 2;
-            characterContainer.y = 0;
         }
 
         const setupWardrobeContainer = (app) => {
             const wardrobeContainer = new Container();
             wardrobeContainer.label = 'wardrobeContainer';
             app.stage.addChild(wardrobeContainer);
-
-            wardrobeContainer.x = app.screen.width / 2;
-            wardrobeContainer.y = app.screen.height - 150;
         }
 
 
