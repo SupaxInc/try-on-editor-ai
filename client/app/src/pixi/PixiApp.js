@@ -12,23 +12,34 @@ const PixiApp = ({ children }) => {
 
     useEffect(() => {
         const initializePlaceholderContainers = (app) => {
-            const characterContainer = new Container();
-            const wardrobeContainer = new Container();
-    
-            characterContainer.label = 'characterContainer';
-            app.stage.addChild(characterContainer);
-            characterContainer.x = app.screen.width / 2;
-            characterContainer.y = 0;
+            setupCharContainer(app);
+            setupWardrobeContainer(app);
+            
             charContainerRef.current = appRef.current.stage.getChildByLabel('characterContainer');
-            setCharContainerRef(charContainerRef);
-    
-            wardrobeContainer.label = 'wardrobeContainer';
-            app.stage.addChild(wardrobeContainer);
-            wardrobeContainer.x = app.screen.width / 2;
-            wardrobeContainer.y = app.screen.height - 150;
             wardrobeContainerRef.current = appRef.current.stage.getChildByLabel('wardrobeContainer');
+            setCharContainerRef(charContainerRef);
             setWardrobeContainerRef(wardrobeContainerRef);
         };
+
+        const setupCharContainer = (app) => {
+            const characterContainer = new Container();
+            characterContainer.label = 'characterContainer';
+            app.stage.addChild(characterContainer);
+            
+            characterContainer.x = app.screen.width / 2;
+            characterContainer.y = 0;
+        }
+
+        const setupWardrobeContainer = (app) => {
+            const wardrobeContainer = new Container();
+            wardrobeContainer.label = 'wardrobeContainer';
+            app.stage.addChild(wardrobeContainer);
+
+            wardrobeContainer.x = app.screen.width / 2;
+            wardrobeContainer.y = app.screen.height - 150;
+        }
+
+
 
         const renderApp = async () => {
             const app = new Application();

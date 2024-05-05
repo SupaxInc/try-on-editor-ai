@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { Sprite } from 'pixi.js';
-import { makeSpriteInteractive } from '../../interaction/helper';
+import { makeSpriteInteractive } from '../../pixi/utils/interactions';
 import { usePixi } from '../../pixi/contexts/PixiContext';
 
 const Character = ({ charSprite }) => {

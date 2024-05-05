@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Container, Sprite } from 'pixi.js';
 import { usePixi } from '../../pixi/contexts/PixiContext';
-import { makeSpriteInteractive } from '../../interaction/helper';
+import { makeSpriteInteractive } from '../../pixi/utils/interactions';
 
 const Wardrobe = ({ itemSprites }) => {
     const { wardrobeContainerRef } = usePixi();
