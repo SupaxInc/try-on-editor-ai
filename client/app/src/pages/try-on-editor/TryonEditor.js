@@ -30,7 +30,7 @@ const TryonEditor = () => {
         <div className='flex flex-col items-center h-screen'>
             <div className='flex w-full justify-center p-4 bg-gray-100'>
                 <input type="file" onChange={uploadCharacter} className="mr-4" />
-                <button onClick={() => setShowWardrobe(!showWardrobe)} className="px-4 py-2 bg-blue-500 text-white rounded-lg">Toggle Items</button>
+                <button onClick={() => setShowWardrobe(!showWardrobe)} className="px-4 py-2 bg-blue-500 text-white rounded-lg">Open Wardrobe</button>
             </div>
             
             <div className='flex flex-col justify-between items-center flex-grow'>
