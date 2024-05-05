@@ -28,9 +28,9 @@ const Wardrobe = ({ itemSprites }) => {
         const setWardrobeBounds = () => {
             const boundary = new Graphics();
             const wardrobeWidth = appRef.current.screen.width // Full width of app canvas
-            const wardrobeHeight = appRef.current.screen.height * 0.2; // Remaining 20% of the height at the bottom
+            const wardrobeHeight = appRef.current.screen.height * 0.25; // Remaining 20% of the height at the bottom
             boundary.rect(0, 0, wardrobeWidth, wardrobeHeight);
-            boundary.fill({color: 0x333333, alpha: 1});
+            boundary.fill({color: 0x333333});
 
             // (0,0) origin is top left of canvas
                 // Imagine the wardrobe rectangle where origin is top left (0,0)

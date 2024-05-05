@@ -15,7 +15,7 @@ const Character = ({ charSprite }) => {
         const setCharacterBounds = () => {
             const boundary = new Graphics();
             const charWidth = appRef.current.screen.width
-            const charHeight = appRef.current.screen.height * 0.8; // Remaining 80% of the height at the bottom
+            const charHeight = appRef.current.screen.height * 0.75; // Remaining 80% of the height at the bottom
             boundary.rect(0, 0, charWidth, charHeight);
             boundary.fill({color: 0xFFFFFF, alpha: 1});
             boundary.stroke({width: 2, color: 0xFF0000, alpha: 1});
