@@ -7,7 +7,6 @@ import { usePixi } from '../../pixi/contexts/PixiContext';
 import { scaleSpriteToFitContainer } from '../../pixi/utils/helper';
 
 // TODO: Make graphics more performant
-// TODO: Make sprites scale to new boundaries
 
 const Character = ({ charSprite }) => {
     const { appRef, charContainerRef } = usePixi();

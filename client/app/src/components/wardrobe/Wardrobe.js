@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { Container, Graphics, Sprite } from 'pixi.js';
 import { usePixi } from '../../pixi/contexts/PixiContext';
 import { makeSpriteInteractive } from '../../pixi/utils/interactions';
+import { scaleSpriteToFitContainer } from '../../pixi/utils/helper';
 
 // TODO: Make graphics more performant
-// TODO: Make item sprites scale to new boundaries
 
 const Wardrobe = ({ itemSprites }) => {
     const { wardrobeContainerRef, appRef } = usePixi();
@@ -17,6 +17,10 @@ const Wardrobe = ({ itemSprites }) => {
             itemsContainer.label = 'itemContainer';
     
             itemSprites.forEach((sprite) => {
+                // Move sprites to center of wardrobe
+                sprite.x = wardrobeContainerRef.current.width / 2;
+                sprite.y = wardrobeContainerRef.current.height / 2;
+                scaleSpriteToFitContainer(sprite, wardrobeContainerRef);
                 makeSpriteInteractive(sprite);
                 itemsContainer.addChild(sprite);
             });
