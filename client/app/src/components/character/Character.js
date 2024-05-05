@@ -38,7 +38,7 @@ const Character = ({ charSprite }) => {
                 // Move sprite to center of character boundaries
                 charSprite.x = charContainerRef.current.width / 2;
                 charSprite.y = charContainerRef.current.height / 2;
-                scaleSpriteToFitContainer(charSprite, charContainerRef);
+                scaleSpriteToFitContainer(charSprite, charContainerRef, 50);
                 makeSpriteInteractive(charSprite);
                 charContainerRef.current.addChild(charSprite);
             }
