@@ -1,4 +1,3 @@
-import { Graphics } from "pixi.js";
 import { RESIZE_AREA_CORNER, RESIZE_AREA_MIN } from "./constants";
 
 // TODO: Resizing is still a little jumpy
@@ -96,11 +95,3 @@ const resizeSprite = (sprite, newPosition, corner) => {
             break;
     }
 };
-
-export const drawDebugBounds = (container) => {
-    const graphics = new Graphics();
-    graphics.stroke({width: 2, color: 0xFF0000, alpha: 1});
-    graphics.rect(0, 0, container.width, container.height);
-    container.addChild(graphics);
-    console.log("Container dimensions:", container.width, container.height);
-}

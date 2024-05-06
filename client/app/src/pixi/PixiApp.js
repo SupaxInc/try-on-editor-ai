@@ -33,8 +33,6 @@ const PixiApp = ({ children }) => {
             app.stage.addChild(wardrobeContainer);
         }
 
-
-
         const renderApp = async () => {
             const app = new Application();
             await app.init({
