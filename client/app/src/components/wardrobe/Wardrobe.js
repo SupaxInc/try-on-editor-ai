@@ -72,7 +72,15 @@ const Wardrobe = ({ itemSprites }) => {
             itemsContainerRef.current.x = 0;
             itemsContainerRef.current.y = 0;
         }
-        
+
+        return () => {
+            // No need to destroy items container, item sprites as its a child of wardrobe container
+            if (wardrobeContainerRef.current) {
+                wardrobeContainerRef.current.destroy(true);
+                wardrobeContainerRef.current = null;
+                itemsContainerRef.current = null;
+            }
+        }
     }, [appRef, wardrobeContainerRef, itemsContainerRef]);
 
     useEffect(() => {
@@ -87,7 +95,6 @@ const Wardrobe = ({ itemSprites }) => {
             scaleSpriteToFitContainer(newSprite, itemsContainerRef, 15);
             makeSpriteInteractive(newSprite);
             itemsContainerRef.current.addChild(newSprite);
-            console.log(itemsContainerRef)
         }
     }, [itemSprites, itemsContainerRef]);
 

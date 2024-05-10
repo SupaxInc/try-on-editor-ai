@@ -26,18 +26,25 @@ const TryonEditor = () => {
         });
     };
 
+    const toggleWardrobe = () => {
+        if (showWardrobe) {
+            setItemSprites([]); // Clear sprites when closing the wardrobe
+        }
+        setShowWardrobe(!showWardrobe);
+    };
+
     return (
         <div className='flex flex-col items-center h-screen'>
             <div className='flex w-full justify-center p-4 bg-gray-100'>
                 <input type="file" onChange={uploadCharacter} className="mr-4" />
-                <button onClick={() => setShowWardrobe(!showWardrobe)} className="px-4 py-2 bg-blue-500 text-white rounded-lg">Open Wardrobe</button>
+                <button onClick={toggleWardrobe} className="px-4 py-2 bg-blue-500 text-white rounded-lg">Open Wardrobe</button>
             </div>
             
             <div className='flex flex-col justify-between items-center flex-grow'>
                 <div className='w-full flex justify-center p-4'>
                     <PixiApp>
                         <Character charSprite={charSprite} />
-                        {showWardrobe && <Wardrobe itemSprites={itemSprites} />}
+                        {showWardrobe && <Wardrobe itemSprites={itemSprites} onClearItemSprites={() => setItemSprites([])}/>}
                     </PixiApp>
                 </div>
                 {showWardrobe && (

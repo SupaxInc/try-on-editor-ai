@@ -4,8 +4,6 @@ const PixiContext = createContext();
 
 export const usePixi = () => useContext(PixiContext);
 
-// TODO: FIX THIS FILE TO NOT STORE REFS TO STATES
-
 export const PixiProvider = ({ children }) => {
     const appRef = useRef(null);
     const charContainerRef = useRef(null);
