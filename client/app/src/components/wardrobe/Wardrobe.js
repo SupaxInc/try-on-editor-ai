@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { Container, Graphics, Sprite } from 'pixi.js';
@@ -7,10 +7,10 @@ import { makeSpriteInteractive } from '../../pixi/utils/interactions';
 import { scaleSpriteToFitContainer } from '../../pixi/utils/helper';
 
 // TODO: Make graphics more performant
-// TODO: Make items container in wardrobe carousel
 
 const Wardrobe = ({ itemSprites }) => {
     const { wardrobeContainerRef, appRef, itemsContainerRef } = usePixi();
+    const totalItemsWidthRef = useRef(0);
 
     useEffect(() => {
         // Containers scales its resolution based on its children, so use graphics to create boundaries for wardrobe
@@ -84,18 +84,27 @@ const Wardrobe = ({ itemSprites }) => {
     }, [appRef, wardrobeContainerRef, itemsContainerRef]);
 
     useEffect(() => {
-        if (!itemsContainerRef.current) {
+        if (!itemsContainerRef.current || itemSprites.length === 0) {
             return;
         }
 
-        const newSprite = itemSprites[itemSprites.length - 1];
-        if (newSprite) {
-            newSprite.x = itemsContainerRef.current.width / 2;
-            newSprite.y = itemsContainerRef.current.height / 2;
-            scaleSpriteToFitContainer(newSprite, itemsContainerRef, 15);
-            makeSpriteInteractive(newSprite);
-            itemsContainerRef.current.addChild(newSprite);
-        }
+        const newItemSprite = itemSprites[itemSprites.length - 1]; // Last added sprite
+
+        // Scale the sprite to container before positioning calculations
+        scaleSpriteToFitContainer(newItemSprite, itemsContainerRef, 15);
+
+        // Position new sprite
+        // TODO: Need to add with item sprite width (scaled) and not just spacing
+        const itemSpacing = 200;
+        const newPositionX = itemSprites.length > 1 ? totalItemsWidthRef.current + itemSpacing : 150;
+        console.log(newPositionX, totalItemsWidthRef);
+        newItemSprite.x = newPositionX;
+        newItemSprite.y = itemsContainerRef.current.height / 2; // Middle of the items container
+        
+        makeSpriteInteractive(newItemSprite);
+        itemsContainerRef.current.addChild(newItemSprite);
+
+        totalItemsWidthRef.current += newPositionX;
     }, [itemSprites, itemsContainerRef]);
 
     return null; // No DOM output

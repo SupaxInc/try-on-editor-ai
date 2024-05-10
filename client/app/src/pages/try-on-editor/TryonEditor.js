@@ -44,7 +44,7 @@ const TryonEditor = () => {
                 <div className='w-full flex justify-center p-4'>
                     <PixiApp>
                         <Character charSprite={charSprite} />
-                        {showWardrobe && <Wardrobe itemSprites={itemSprites} onClearItemSprites={() => setItemSprites([])}/>}
+                        {showWardrobe && <Wardrobe itemSprites={itemSprites} />}
                     </PixiApp>
                 </div>
                 {showWardrobe && (
