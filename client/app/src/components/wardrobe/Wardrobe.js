@@ -51,29 +51,35 @@ const Wardrobe = ({ itemSprites }) => {
         if (!appRef.current) {
             return;
         }
-        /* Setup Wardrobe container */
-        const wardrobeContainer = setupWardrobeContainer();
-        appRef.current.stage.addChild(wardrobeContainer);
-        wardrobeContainerRef.current = appRef.current.stage.getChildByLabel('wardrobeContainer');
-        // (0,0) origin is top left of canvas, imagine the wardrobe rectangle where origin is top left (0,0)
-        wardrobeContainerRef.current.x = 0; // Position x to start at left of canvas
-        // Position y to start at wardrobe height - the app canvas's screen height, so it starts 80% of screen
-        wardrobeContainerRef.current.y = appRef.current.screen.height - wardrobeContainerRef.current.height;
+
+        if (!wardrobeContainerRef.current) {
+            /* Setup Wardrobe container */
+            const wardrobeContainer = setupWardrobeContainer();
+            appRef.current.stage.addChild(wardrobeContainer);
+            wardrobeContainerRef.current = appRef.current.stage.getChildByLabel('wardrobeContainer');
+            // (0,0) origin is top left of canvas, imagine the wardrobe rectangle where origin is top left (0,0)
+            wardrobeContainerRef.current.x = 0; // Position x to start at left of canvas
+            // Position y to start at wardrobe height - the app canvas's screen height, so it starts 80% of screen
+            wardrobeContainerRef.current.y = appRef.current.screen.height - wardrobeContainerRef.current.height;
+        }
         
-        /* Setup Items Container */
-        const itemsContainer = setupItemsContainer();
-        wardrobeContainerRef.current.addChild(itemsContainer);
-        itemsContainerRef.current = wardrobeContainerRef.current.getChildByLabel('itemsContainer');
-        // Position at top left of wardrobe container
-        itemsContainerRef.current.x = 0;
-        itemsContainerRef.current.y = 0;
+        if (!itemsContainerRef.current) {
+            /* Setup Items Container */
+            const itemsContainer = setupItemsContainer();
+            wardrobeContainerRef.current.addChild(itemsContainer);
+            itemsContainerRef.current = wardrobeContainerRef.current.getChildByLabel('itemsContainer');
+            // Position at top left of wardrobe container
+            itemsContainerRef.current.x = 0;
+            itemsContainerRef.current.y = 0;
+        }
+        
     }, [appRef, wardrobeContainerRef, itemsContainerRef]);
 
     useEffect(() => {
         if (!itemsContainerRef.current) {
             return;
         }
-        console.log(itemsContainerRef)
+
         const newSprite = itemSprites[itemSprites.length - 1];
         if (newSprite) {
             newSprite.x = itemsContainerRef.current.width / 2;
