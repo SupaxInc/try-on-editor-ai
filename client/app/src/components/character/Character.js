@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import { Graphics, Sprite } from 'pixi.js';
+import { Container, Graphics, Sprite } from 'pixi.js';
 import { makeSpriteInteractive } from '../../pixi/utils/interactions';
 import { usePixi } from '../../pixi/contexts/PixiContext';
 import { scaleSpriteToFitContainer } from '../../pixi/utils/helper';
@@ -12,6 +12,13 @@ const Character = ({ charSprite }) => {
     const { appRef, charContainerRef } = usePixi();
 
     useEffect(() => {
+        const setupCharContainer = () => {
+            const characterContainer = new Container();
+            characterContainer.label = 'characterContainer';
+            appRef.current.stage.addChild(characterContainer);
+            charContainerRef.current = appRef.current.stage.getChildByLabel('characterContainer');
+        }
+
         // Containers scales its resolution based on its children, so use graphics to create boundaries for character
         const setCharacterBounds = () => {
             const boundary = new Graphics();
@@ -30,7 +37,8 @@ const Character = ({ charSprite }) => {
             return boundary;
         }
 
-        if (appRef && charContainerRef.current) {
+        if (appRef.current) {
+            setupCharContainer();
             const boundary = setCharacterBounds();
            
             charContainerRef.current.addChild(boundary);

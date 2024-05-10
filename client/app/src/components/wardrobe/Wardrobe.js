@@ -10,30 +10,16 @@ import { scaleSpriteToFitContainer } from '../../pixi/utils/helper';
 // TODO: Make items container in wardrobe carousel
 
 const Wardrobe = ({ itemSprites }) => {
-    const { wardrobeContainerRef, appRef } = usePixi();
+    const { wardrobeContainerRef, appRef, itemsContainerRef } = usePixi();
 
     useEffect(() => {
-        const createItemsContainer = () => {
-            const itemsContainer = new Container();
-            const boundary = setItemsBounds(itemsContainer);
-            itemsContainer.label = 'itemsContainer';
-
-            itemsContainer.addChild(boundary);
-            return itemsContainer;
+        const setupWardrobeContainer = () => {
+            const wardrobeContainer = new Container();
+            wardrobeContainer.label = 'wardrobeContainer';
+            appRef.current.stage.addChild(wardrobeContainer);
+            wardrobeContainerRef.current = appRef.current.stage.getChildByLabel('wardrobeContainer');
         }
 
-        const setItemsBounds = (itemsContainer) => {
-            const boundary = new Graphics();
-            const itemsWidth = wardrobeContainerRef.current.width;
-            const itemsHeight = wardrobeContainerRef.current.height * 0.80;
-            boundary.rect(0, 0, itemsWidth, itemsHeight);
-            boundary.fill('black');
-
-            itemsContainer.x = 0; 
-            itemsContainer.y = 0;
-            return boundary;
-        }
-        
         // Containers scales its resolution based on its children, so use graphics to create boundaries for wardrobe
         const setWardrobeBounds = () => {
             const boundary = new Graphics();
@@ -51,26 +37,55 @@ const Wardrobe = ({ itemSprites }) => {
 
             return boundary;
         }
-        
-        if (appRef && wardrobeContainerRef.current) {
-            const boundary = setWardrobeBounds();
-            wardrobeContainerRef.current.addChild(boundary);
 
-            const itemsContainer = createItemsContainer();
-            wardrobeContainerRef.current.addChild(itemsContainer);
+        const setItemsBounds = (itemsContainer) => {
+            const boundary = new Graphics();
+            const itemsWidth = wardrobeContainerRef.current.width;
+            const itemsHeight = wardrobeContainerRef.current.height * 0.80;
+            boundary.rect(0, 0, itemsWidth, itemsHeight);
+            boundary.fill('black');
 
-            if (itemSprites.length > 0) {
-                itemSprites.forEach((sprite) => {
-                    // Move sprites to center of wardrobe
-                    sprite.x = wardrobeContainerRef.current.width / 2;
-                    sprite.y = wardrobeContainerRef.current.height / 2;
-                    scaleSpriteToFitContainer(sprite, wardrobeContainerRef, 35);
-                    makeSpriteInteractive(sprite);
-                    itemsContainer.addChild(sprite);
-                });
-            }
+            itemsContainer.x = 0;
+            itemsContainer.y = 0;
+            return boundary;
         }
-    }, [wardrobeContainerRef, appRef, itemSprites]);
+
+        const createItemsContainer = () => {
+            const itemsContainer = new Container();
+            const boundary = setItemsBounds(itemsContainer);
+            itemsContainer.label = 'itemsContainer';
+
+            itemsContainer.addChild(boundary);
+            return itemsContainer;
+        }
+
+        if (!appRef.current) {
+            return;
+        }
+
+        setupWardrobeContainer();
+        const boundary = setWardrobeBounds();
+        wardrobeContainerRef.current.addChild(boundary);
+        
+        const itemsContainer = createItemsContainer();
+        wardrobeContainerRef.current.addChild(itemsContainer);
+        itemsContainerRef.current = wardrobeContainerRef.current.getChildByLabel('itemsContainer');
+    }, [appRef, wardrobeContainerRef, itemsContainerRef]);
+
+    useEffect(() => {
+        if (!itemsContainerRef.current) {
+            return;
+        }
+        
+        const newSprite = itemSprites[itemSprites.length - 1];
+        if (newSprite) {
+            newSprite.x = itemsContainerRef.current.width / 2;
+            newSprite.y = itemsContainerRef.current.height / 2;
+            scaleSpriteToFitContainer(newSprite, itemsContainerRef, 15);
+            makeSpriteInteractive(newSprite);
+            itemsContainerRef.current.addChild(newSprite);
+        }
+    }, [itemSprites, itemsContainerRef]);
 
     return null; // No DOM output
 }

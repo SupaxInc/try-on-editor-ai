@@ -1,38 +1,14 @@
-import React, { useRef, useEffect } from 'react';
-import { Application, Container } from 'pixi.js';
+import React, { useRef, useEffect, useState } from 'react';
+import { Application } from 'pixi.js';
 import { usePixi } from './contexts/PixiContext';
 
 const PixiApp = ({ children }) => {
-    const { setAppRef, setCharContainerRef, setWardrobeContainerRef } = usePixi();
-    const appRef = useRef(null);
+    const { appRef } = usePixi();
     const containerRef = useRef(null);
-    const charContainerRef = useRef(null);
-    const wardrobeContainerRef = useRef(null);
+    const [isReady, setIsReady] = useState(false);
 
 
     useEffect(() => {
-        const initializePlaceholderContainers = (app) => {
-            setupCharContainer(app);
-            setupWardrobeContainer(app);
-            
-            charContainerRef.current = appRef.current.stage.getChildByLabel('characterContainer');
-            wardrobeContainerRef.current = appRef.current.stage.getChildByLabel('wardrobeContainer');
-            setCharContainerRef(charContainerRef);
-            setWardrobeContainerRef(wardrobeContainerRef);
-        };
-
-        const setupCharContainer = (app) => {
-            const characterContainer = new Container();
-            characterContainer.label = 'characterContainer';
-            app.stage.addChild(characterContainer);
-        }
-
-        const setupWardrobeContainer = (app) => {
-            const wardrobeContainer = new Container();
-            wardrobeContainer.label = 'wardrobeContainer';
-            app.stage.addChild(wardrobeContainer);
-        }
-
         const renderApp = async () => {
             const app = new Application();
             await app.init({
@@ -41,14 +17,12 @@ const PixiApp = ({ children }) => {
                 backgroundColor: 0x1099bb,
             });
 
-            // Only append canvas if appRef is empty
+            // Only append canvas when app is ready to be initialized
             if (!appRef.current) { 
                 containerRef.current.appendChild(app.canvas);
                 appRef.current = app;
-                setAppRef(appRef);
+                setIsReady(true); // TODO: Add a spinner here
             }
-            
-            initializePlaceholderContainers(app);
         } 
 
         renderApp();
@@ -57,11 +31,11 @@ const PixiApp = ({ children }) => {
                 appRef.current.destroy(true);
             }
         };
-    }, [setCharContainerRef, setWardrobeContainerRef, setAppRef]);
+    }, [appRef]);
 
     return (
         <div ref={containerRef}>
-            {children}
+            {isReady ? children : null}
         </div>
     );
 };

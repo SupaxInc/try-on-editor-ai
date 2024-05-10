@@ -1,19 +1,23 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useRef } from 'react';
 
 const PixiContext = createContext();
 
 export const usePixi = () => useContext(PixiContext);
 
+// TODO: FIX THIS FILE TO NOT STORE REFS TO STATES
+
 export const PixiProvider = ({ children }) => {
-    const [appRef, setAppRef] = useState(null);
-    const [charContainerRef, setCharContainerRef] = useState(null);
-    const [wardrobeContainerRef, setWardrobeContainerRef] = useState(null);
+    const appRef = useRef(null);
+    const charContainerRef = useRef(null);
+    const wardrobeContainerRef = useRef(null);
+    const itemsContainerRef = useRef(null);
 
     return (
         <PixiContext.Provider value={{
-            appRef, setAppRef,
-            charContainerRef, setCharContainerRef,
-            wardrobeContainerRef, setWardrobeContainerRef
+            appRef,
+            charContainerRef,
+            wardrobeContainerRef,
+            itemsContainerRef,
         }}>
             {children}
         </PixiContext.Provider>
