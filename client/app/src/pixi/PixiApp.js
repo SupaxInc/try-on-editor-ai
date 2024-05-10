@@ -16,11 +16,12 @@ const PixiApp = ({ children }) => {
                 height: 900,
                 backgroundColor: 0x1099bb,
             });
-
+            
             // Only append canvas when app is ready to be initialized
             if (!appRef.current) { 
                 containerRef.current.appendChild(app.canvas);
                 appRef.current = app;
+                window.__PIXI_APP__ = app; // TODO: Remove when debugging on PixiJS extension is done
                 setIsReady(true); // TODO: Add a spinner here
             }
         } 
