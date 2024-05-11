@@ -4,7 +4,7 @@ import { RESIZE_AREA_CORNER, RESIZE_AREA_MIN } from "./constants";
 // TODO: Resizing stopped working after adding containers, check pointer position relative to sprites parent
 // TODO: Need to add boundaries to containers
 
-export const makeSpriteInteractive = (sprite) => {
+export const makeSpriteInteractive = (sprite, options = {}) => {
     sprite.interactive = true;  // Allow sprite to interact with pointer events
     sprite.cursor = 'pointer';  // Default cursor on hover
 
@@ -18,6 +18,8 @@ export const makeSpriteInteractive = (sprite) => {
         sprite.alpha = 1;
         sprite.cursor = 'pointer';
         sprite.data = null;
+
+        options?.onDropResetToInitial?.(sprite);
     };
 
     sprite.on('pointerdown', (event) => {
@@ -94,4 +96,9 @@ const resizeSprite = (sprite, newPosition, corner) => {
         default:
             break;
     }
+};
+
+export const onDropResetToInitial = (sprite) => {
+    sprite.x = sprite.initialX;
+    sprite.y = sprite.initialY;
 };

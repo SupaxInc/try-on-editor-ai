@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Container, Graphics, Sprite } from 'pixi.js';
 import { usePixi } from '../../pixi/contexts/PixiContext';
-import { makeSpriteInteractive } from '../../pixi/utils/interactions';
+import { makeSpriteInteractive, onDropResetToInitial } from '../../pixi/utils/interactions';
 import { scaleSpriteToFitContainer } from '../../pixi/utils/helper';
 
 // TODO: Make graphics more performant
@@ -97,11 +97,13 @@ const Wardrobe = ({ itemSprites }) => {
         // TODO: Need to add with item sprite width (scaled) and not just spacing
         const itemSpacing = 200;
         const newPositionX = itemSprites.length > 1 ? totalItemsWidthRef.current + itemSpacing : 150;
-        console.log(newPositionX, totalItemsWidthRef);
         newItemSprite.x = newPositionX;
         newItemSprite.y = itemsContainerRef.current.height / 2; // Middle of the items container
-        
-        makeSpriteInteractive(newItemSprite);
+
+        // Storing new initialX and initialY properties to be used for onDropResetToInitial
+        newItemSprite.initialX = newPositionX;
+        newItemSprite.initialY = itemsContainerRef.current.height / 2; // Middle of the items container
+        makeSpriteInteractive(newItemSprite, { onDropResetToInitial });
         itemsContainerRef.current.addChild(newItemSprite);
 
         totalItemsWidthRef.current += newPositionX;
