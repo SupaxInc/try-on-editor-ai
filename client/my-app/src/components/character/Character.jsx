@@ -50,6 +50,8 @@ const Character = ({ charSprite }) => {
         }
 
         if (charSprite) {
+            charSprite.label = 'characterSprite';
+            
             // Move sprite to center of character boundaries
             charSprite.x = charContainerRef.current.width / 2;
             charSprite.y = charContainerRef.current.height / 2;
