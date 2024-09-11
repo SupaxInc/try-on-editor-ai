@@ -22,7 +22,13 @@ app.post('/try-on', upload.fields([{ name: 'avatar' }, { name: 'clothing' }]), a
   //   clothing: clothingBuffer.toString('base64')
   // }));
 
-  res.json({ jobId });
+  // res.json({ jobId });
+
+  res.json({
+    jobId,
+    avatar: avatarBuffer.toString('base64'),
+    clothing: clothingBuffer.toString('base64')
+  });
 });
 
 // app.get('/result/:jobId', async (req, res) => {
