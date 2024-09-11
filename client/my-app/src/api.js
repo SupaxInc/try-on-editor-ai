@@ -43,3 +43,18 @@ const getBase64FromSprite = (sprite) => {
         canvas.toBlob((blob) => resolve(blob), 'image/png');
     });
 };
+
+// const pollForResult = async (jobId) => {
+//     try {
+//         const response = await axios.get(`/result/${jobId}`);
+//         if (response.data.result) {
+//             // Handle the result (e.g., update the character sprite)
+//             console.log('Try-on result:', response.data.result);
+//         } else {
+//             // If no result yet, poll again after a delay
+//             setTimeout(() => pollForResult(jobId), 1000);
+//         }
+//     } catch (error) {
+//         console.error('Error polling for result:', error);
+//     }
+// };
