@@ -12,6 +12,7 @@ const Wardrobe = ({ itemSprites }) => {
     const { wardrobeContainerRef, appRef, itemsContainerRef } = usePixi();
     const totalItemsWidthRef = useRef(0);
 
+    // Initial setup of wardrobe container and items container
     useEffect(() => {
         // Containers scales its resolution based on its children, so use graphics to create boundaries for wardrobe
         const setWardrobeBounds = (wardrobeContainer) => {
@@ -52,8 +53,8 @@ const Wardrobe = ({ itemSprites }) => {
             return;
         }
 
+        /* Setup Wardrobe container */
         if (!wardrobeContainerRef.current) {
-            /* Setup Wardrobe container */
             const wardrobeContainer = setupWardrobeContainer();
             appRef.current.stage.addChild(wardrobeContainer);
             wardrobeContainerRef.current = appRef.current.stage.getChildByLabel('wardrobeContainer');
@@ -63,8 +64,8 @@ const Wardrobe = ({ itemSprites }) => {
             wardrobeContainerRef.current.y = appRef.current.screen.height - wardrobeContainerRef.current.height;
         }
         
+        /* Setup Items Container */
         if (!itemsContainerRef.current) {
-            /* Setup Items Container */
             const itemsContainer = setupItemsContainer();
             wardrobeContainerRef.current.addChild(itemsContainer);
             itemsContainerRef.current = wardrobeContainerRef.current.getChildByLabel('itemsContainer');
@@ -74,7 +75,7 @@ const Wardrobe = ({ itemSprites }) => {
         }
 
         return () => {
-            // No need to destroy items container, item sprites as its a child of wardrobe container
+            // No need to destroy items container or item sprites as its children of wardrobe container
             if (wardrobeContainerRef.current) {
                 wardrobeContainerRef.current.destroy(true);
                 wardrobeContainerRef.current = null;
@@ -83,6 +84,7 @@ const Wardrobe = ({ itemSprites }) => {
         }
     }, [appRef, wardrobeContainerRef, itemsContainerRef]);
 
+    // Add newly uploaded item sprites to items container
     useEffect(() => {
         if (!itemsContainerRef.current || itemSprites.length === 0) {
             return;
@@ -93,19 +95,20 @@ const Wardrobe = ({ itemSprites }) => {
         // Scale the sprite to container before positioning calculations
         scaleSpriteToFitContainer(newItemSprite, itemsContainerRef, 15);
 
-        // Position new sprite
+        // Position new sprite in the items container
         // TODO: Need to add with item sprite width (scaled) and not just spacing
         const itemSpacing = 200;
         const newPositionX = itemSprites.length > 1 ? totalItemsWidthRef.current + itemSpacing : 150;
         newItemSprite.x = newPositionX;
         newItemSprite.y = itemsContainerRef.current.height / 2; // Middle of the items container
 
-        // Storing new initialX and initialY properties to be used for onDropResetToInitial
+        // Storing new initialX and initialY properties to sprite object to be used for onDropResetToInitial
         newItemSprite.initialX = newPositionX;
         newItemSprite.initialY = itemsContainerRef.current.height / 2; // Middle of the items container
         makeSpriteInteractive(newItemSprite, { onDropResetToInitial });
         itemsContainerRef.current.addChild(newItemSprite);
 
+        // Increase total items width to account for new sprite
         totalItemsWidthRef.current += newPositionX;
     }, [itemSprites, itemsContainerRef]);
 
