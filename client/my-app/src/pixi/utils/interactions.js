@@ -50,7 +50,16 @@ export const makeSpriteInteractive = (sprite, options = {}) => {
     });
 
     // Resets interaction states when pointer is released
-    sprite.on('pointerup', resetResizeDraggingStates);
+    sprite.on('pointerup', (event) => {
+        if (dragging) {
+            const globalPosition = event.data.global;
+            if (options?.isOnTopOfSprite?.(options?.charContainerRef, globalPosition)) {
+                console.log('on top of char');
+            }
+        } else {
+            resetResizeDraggingStates();
+        }
+    });
     sprite.on('pointerupoutside', resetResizeDraggingStates);
 
     // Handles pointer move events for resizing or dragging
@@ -98,7 +107,17 @@ const resizeSprite = (sprite, newPosition, corner) => {
     }
 };
 
+// Reset sprite to initial position when dropped
 export const onDropResetToInitial = (sprite) => {
     sprite.x = sprite.initialX;
     sprite.y = sprite.initialY;
 };
+
+// Check if the current position passed is on top of a specific sprite
+export const isOnTopOfSprite = (containerRef, currentPosition) => {
+    if (!containerRef.current) return false;
+    const sprite = containerRef.current.children.find(child => child.label === 'characterSprite');
+
+    const spriteBounds = sprite.getBounds();
+    return spriteBounds.containsPoint(currentPosition.x, currentPosition.y);
+}

@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 
 import { Container, Graphics, Sprite } from 'pixi.js';
 import { usePixi } from '../../pixi/contexts/PixiContext';
-import { makeSpriteInteractive, onDropResetToInitial } from '../../pixi/utils/interactions';
+import { isOnTopOfSprite, makeSpriteInteractive, onDropResetToInitial } from '../../pixi/utils/interactions';
 import { scaleSpriteToFitContainer } from '../../pixi/utils/helper';
 
 // TODO: Make graphics more performant
 
 const Wardrobe = ({ itemSprites }) => {
-    const { wardrobeContainerRef, appRef, itemsContainerRef } = usePixi();
+    const { wardrobeContainerRef, appRef, itemsContainerRef, charContainerRef } = usePixi();
     const totalItemsWidthRef = useRef(0);
 
     // Initial setup of wardrobe container and items container
@@ -84,7 +84,7 @@ const Wardrobe = ({ itemSprites }) => {
         }
     }, [appRef, wardrobeContainerRef, itemsContainerRef]);
 
-    // Add newly uploaded item sprites to items container
+    // Add newly uploaded item sprites to items container and add interactions
     useEffect(() => {
         if (!itemsContainerRef.current || itemSprites.length === 0) {
             return;
@@ -105,12 +105,12 @@ const Wardrobe = ({ itemSprites }) => {
         // Storing new initialX and initialY properties to sprite object to be used for onDropResetToInitial
         newItemSprite.initialX = newPositionX;
         newItemSprite.initialY = itemsContainerRef.current.height / 2; // Middle of the items container
-        makeSpriteInteractive(newItemSprite, { onDropResetToInitial });
+        makeSpriteInteractive(newItemSprite, { onDropResetToInitial, isOnTopOfSprite, charContainerRef });
         itemsContainerRef.current.addChild(newItemSprite);
 
         // Increase total items width to account for new sprite
         totalItemsWidthRef.current += newPositionX;
-    }, [itemSprites, itemsContainerRef]);
+    }, [itemSprites, itemsContainerRef, charContainerRef]);
 
     return null; // No DOM output
 }
