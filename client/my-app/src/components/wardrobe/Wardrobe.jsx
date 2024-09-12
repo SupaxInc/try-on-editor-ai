@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 
 import { Container, Graphics, Sprite } from 'pixi.js';
 import { usePixi } from '../../pixi/contexts/PixiContext';
-import { isOnTopOfSprite, makeSpriteInteractive, onDropResetToInitial } from '../../pixi/utils/interactions';
+import { isOnTopOfSprite, makeSpriteInteractive, onDropResetToInitial, onDropOnSprite } from '../../pixi/utils/interactions';
 import { scaleSpriteToFitContainer } from '../../pixi/utils/helper';
+import { triggerTryOn } from '../../api';
 
 // TODO: Make graphics more performant
 
@@ -91,6 +92,7 @@ const Wardrobe = ({ itemSprites }) => {
         }
 
         const newItemSprite = itemSprites[itemSprites.length - 1]; // Last added sprite
+        const characterSprite = charContainerRef.current.children.find(child => child.label === 'characterSprite');
 
         // Scale the sprite to container before positioning calculations
         scaleSpriteToFitContainer(newItemSprite, itemsContainerRef, 15);
@@ -105,7 +107,18 @@ const Wardrobe = ({ itemSprites }) => {
         // Storing new initialX and initialY properties to sprite object to be used for onDropResetToInitial
         newItemSprite.initialX = newPositionX;
         newItemSprite.initialY = itemsContainerRef.current.height / 2; // Middle of the items container
-        makeSpriteInteractive(newItemSprite, { onDropResetToInitial, isOnTopOfSprite, charContainerRef });
+
+        // Add interactions to the new item sprite
+        makeSpriteInteractive(newItemSprite, 
+            { 
+                onDropResetToInitial, 
+                isOnTopOfSprite, 
+                sprite: characterSprite, 
+                onDropOnSprite: (droppedSprite) => onDropOnSprite(characterSprite, droppedSprite, triggerTryOn)
+            }
+        );
+
+        // Add the new item sprite to the items container (adding it to the stage)
         itemsContainerRef.current.addChild(newItemSprite);
 
         // Increase total items width to account for new sprite

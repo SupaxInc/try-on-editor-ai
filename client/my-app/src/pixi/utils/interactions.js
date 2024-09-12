@@ -53,12 +53,11 @@ export const makeSpriteInteractive = (sprite, options = {}) => {
     sprite.on('pointerup', (event) => {
         if (dragging) {
             const globalPosition = event.data.global;
-            if (options?.isOnTopOfSprite?.(options?.charContainerRef, globalPosition)) {
-                console.log('on top of char');
+            if (options?.isOnTopOfSprite?.(options?.sprite, globalPosition)) {
+                options?.onDropOnSprite?.(sprite);
             }
-        } else {
-            resetResizeDraggingStates();
         }
+        resetResizeDraggingStates();
     });
     sprite.on('pointerupoutside', resetResizeDraggingStates);
 
@@ -114,10 +113,15 @@ export const onDropResetToInitial = (sprite) => {
 };
 
 // Check if the current position passed is on top of a specific sprite
-export const isOnTopOfSprite = (containerRef, currentPosition) => {
-    if (!containerRef.current) return false;
-    const sprite = containerRef.current.children.find(child => child.label === 'characterSprite');
+export const isOnTopOfSprite = (sprite, currentPosition) => {
+    if (!sprite) return false;
 
     const spriteBounds = sprite.getBounds();
     return spriteBounds.containsPoint(currentPosition.x, currentPosition.y);
 }
+
+export const onDropOnSprite = (targetSprite, droppedSprite, callback) => {
+    if (targetSprite && droppedSprite) {
+        callback(targetSprite, droppedSprite);
+    }
+};
