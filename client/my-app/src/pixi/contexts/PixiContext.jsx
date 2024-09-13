@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useRef } from 'react';
 
+// TODO: Convert this to typescript so that definitions can show up in IDE
+
 const PixiContext = createContext();
 
 export const usePixi = () => useContext(PixiContext);
