@@ -114,7 +114,7 @@ const Wardrobe = ({ itemSprites }) => {
                 onDropResetToInitial, 
                 isOnTopOfSprite, 
                 sprite: characterSprite, 
-                onDropOnSprite: (droppedSprite) => onDropOnSprite(characterSprite, droppedSprite, triggerTryOn)
+                onDropOnSprite: (droppedSprite) => onDropOnSprite(characterSprite, droppedSprite, triggerTryOn, appRef.current)
             }
         );
 

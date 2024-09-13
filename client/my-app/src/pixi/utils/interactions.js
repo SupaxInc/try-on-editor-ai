@@ -120,8 +120,8 @@ export const isOnTopOfSprite = (sprite, currentPosition) => {
     return spriteBounds.containsPoint(currentPosition.x, currentPosition.y);
 }
 
-export const onDropOnSprite = (targetSprite, droppedSprite, callback) => {
+export const onDropOnSprite = (targetSprite, droppedSprite, callback, app) => {
     if (targetSprite && droppedSprite) {
-        callback(targetSprite, droppedSprite);
+        callback(targetSprite, droppedSprite, app);
     }
 };
