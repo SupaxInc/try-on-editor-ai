@@ -1,33 +1,37 @@
 import express from 'express';
+import cors from 'cors';
 import multer from 'multer';
 // import Redis from 'redis';
 
 const app = express();
-const upload = multer({ storage: multer.memoryStorage() });
 
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+//const upload = multer({ storage: multer.memoryStorage() });
 // const redisClient = Redis.createClient();
 
 // (async () => {
 //   await redisClient.connect();
 // })();
 
-app.post('/try-on', upload.fields([{ name: 'avatar' }, { name: 'clothing' }]), async (req, res) => {
+app.post('/try-on', (req, res) => {
   const jobId = Date.now().toString();
-  const avatarBuffer = req.files.avatar[0].buffer;
-  const clothingBuffer = req.files.clothing[0].buffer;
+  const { avatar, clothing } = req.body;
 
   // await redisClient.rPush('ml_jobs', JSON.stringify({
   //   jobId,
-  //   avatar: avatarBuffer.toString('base64'),
-  //   clothing: clothingBuffer.toString('base64')
+  //   avatar,
+  //   clothing
   // }));
 
   // res.json({ jobId });
 
   res.json({
     jobId,
-    avatar: avatarBuffer.toString('base64'),
-    clothing: clothingBuffer.toString('base64')
+    avatar,
+    clothing
   });
 });
 
