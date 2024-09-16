@@ -14,9 +14,6 @@ export const triggerTryOn = async (charSprite, itemSprite, pixiApp) => {
         const response = await axios.post('http://localhost:3001/try-on', data, {
             headers: { 'Content-Type': 'application/json' }
         });
-
-        // const { jobId } = response.data;
-        // pollForResult(jobId);
     } catch (error) {
         console.error('Error triggering try-on:', error);
     }
@@ -33,18 +30,3 @@ const getBase64FromSprite = async (sprite, pixiApp) => {
         resolve(spriteImage.toDataURL('image/png').split(',')[1]);
     });
 };
-
-// const pollForResult = async (jobId) => {
-//     try {
-//         const response = await axios.get(`/result/${jobId}`);
-//         if (response.data.result) {
-//             // Handle the result (e.g., update the character sprite)
-//             console.log('Try-on result:', response.data.result);
-//         } else {
-//             // If no result yet, poll again after a delay
-//             setTimeout(() => pollForResult(jobId), 1000);
-//         }
-//     } catch (error) {
-//         console.error('Error polling for result:', error);
-//     }
-// };
