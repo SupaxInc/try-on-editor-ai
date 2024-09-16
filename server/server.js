@@ -1,14 +1,25 @@
-import express from 'express';
-import cors from 'cors';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import { createClient } from "redis";
+
+dotenv.config();
+
+const redisClient = createClient({
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT,
+});
+redisClient.on("error", (err) => console.log("Redis Client Error", err));
+await redisClient.connect();
 
 const app = express();
-
-// Middleware
 app.use(cors());
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
+app.use(express.json({ limit: "50mb" }));
+app.use(
+  express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
+);
 
-app.post('/try-on', (req, res) => {
+app.post("/try-on", (req, res) => {
   // TODO: Possibly use this for Redis job queue ID in the future
   const jobId = Date.now().toString();
 
@@ -17,8 +28,9 @@ app.post('/try-on', (req, res) => {
   res.json({
     jobId,
     avatar,
-    clothing
+    clothing,
   });
 });
 
-app.listen(3001, () => console.log('Server running on port 3001'));
+await client.disconnect();
+app.listen(3001, () => console.log("Server running on port 3001"));
