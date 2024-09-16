@@ -32,5 +32,5 @@ app.post("/try-on", (req, res) => {
   });
 });
 
-await client.disconnect();
+await redisClient.disconnect();
 app.listen(3001, () => console.log("Server running on port 3001"));
