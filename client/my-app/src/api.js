@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-// TODO: Change frontend to require an avatar upload first before uploading item sprites
-// TODO: Change server side to save the uploaded avatar so we don't need to continously pass the avatar in the request body
+// TODO: Think of ways to increase performance here, maybe cache avatar/items or save avatar states in the DB
 export const triggerTryOn = async (charSprite, itemSprite, pixiApp) => {
     try {
         const charBase64 = await getBase64FromSprite(charSprite, pixiApp);
@@ -15,8 +14,6 @@ export const triggerTryOn = async (charSprite, itemSprite, pixiApp) => {
         const response = await axios.post('http://localhost:3001/try-on', data, {
             headers: { 'Content-Type': 'application/json' }
         });
-
-        console.log(response.data);
 
         // const { jobId } = response.data;
         // pollForResult(jobId);
