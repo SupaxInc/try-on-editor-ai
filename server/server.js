@@ -82,7 +82,7 @@ const startServer = async () => {
 };
 
 // This function simulates processing jobs from the queue
-// In a real-world scenario, this would be a separate worker process
+// TODO: Replace this with a python worker
 const processJobs = async () => {
   while (true) {
     try {
