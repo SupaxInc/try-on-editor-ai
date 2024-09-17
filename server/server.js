@@ -5,8 +5,10 @@ import { createClient } from "redis";
 
 dotenv.config();
 
+const REDIS_HOST = process.env.REDIS_HOST || "redis";
+
 const redisClient = createClient({
-  host: process.env.REDIS_HOST,
+  host: REDIS_HOST,
   port: process.env.REDIS_PORT,
 });
 redisClient.on("error", (err) => console.log("Redis Client Error", err));
