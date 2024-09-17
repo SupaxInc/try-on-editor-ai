@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const API_BASE_URL = "http://localhost:3001";
+
 // TODO: Think of ways to increase performance here, maybe cache avatar/items or save avatar states in the DB
 export const triggerTryOn = async (charSprite, itemSprite, pixiApp) => {
   try {
@@ -11,11 +13,14 @@ export const triggerTryOn = async (charSprite, itemSprite, pixiApp) => {
       clothing: itemBase64,
     };
 
-    const response = await axios.post("http://localhost:3001/try-on", data, {
+    const response = await axios.post(`${API_BASE_URL}/try-on`, data, {
       headers: { "Content-Type": "application/json" },
     });
 
+    const { jobId, avatar, clothing } = response.data;
     console.log(response.data);
+
+    return pollJobResult(jobId);
   } catch (error) {
     console.error("Error triggering try-on:", error);
   }
@@ -31,4 +36,28 @@ const getBase64FromSprite = async (sprite, pixiApp) => {
     // Convert the canvas content to a PNG image and remove the MIME type prefix
     resolve(spriteImage.toDataURL("image/png").split(",")[1]);
   });
+};
+
+const pollJobResult = async (jobId) => {
+  const maxAttempts = 30;
+  const pollInterval = 2000; // 2 seconds x 30 = 60 seconds max
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/job/${jobId}`);
+      const { status, result } = response.data;
+
+      if (status === "completed") {
+        return result;
+      }
+
+      // If job is still pending, wait before next poll
+      await new Promise((resolve) => setTimeout(resolve, pollInterval));
+    } catch (error) {
+      console.error("Error polling job result:", error);
+      throw error;
+    }
+  }
+
+  throw new Error("Job polling timed out");
 };

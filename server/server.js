@@ -5,15 +5,15 @@ import { createClient } from "redis";
 
 dotenv.config();
 
+// Setup Redis
 const REDIS_HOST = process.env.REDIS_HOST || "redis";
-
 const redisClient = createClient({
   host: REDIS_HOST,
   port: process.env.REDIS_PORT,
 });
 redisClient.on("error", (err) => console.log("Redis Client Error", err));
-await redisClient.connect();
 
+// Setup express with middleware
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: "50mb" }));
@@ -21,18 +21,103 @@ app.use(
   express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
 );
 
-app.post("/try-on", (req, res) => {
-  // TODO: Possibly use this for Redis job queue ID in the future
-  const jobId = Date.now().toString();
+// Connect to Redis before starting the server
+const startServer = async () => {
+  try {
+    await redisClient.connect();
+    console.log("Connected to Redis");
 
-  const { avatar, clothing } = req.body;
+    app.post("/try-on", async (req, res) => {
+      const jobId = Date.now().toString();
+      const { avatar, clothing } = req.body;
 
-  res.json({
-    jobId,
-    avatar,
-    clothing,
-  });
+      // Add new job to Redis queue with named "try_on_queue", allows for FIFO
+      await redisClient.rPush(
+        "try_on_queue",
+        JSON.stringify({ jobId, avatar, clothing })
+      );
+
+      // Sets a key-value pair in redis of, key: job:{jobId} and value: {"status": "pending"}
+      // Setting the initial status of the recently added job in a separate key-value pairing
+      await redisClient.set(
+        `job:${jobId}`,
+        JSON.stringify({ status: "pending" })
+      );
+
+      res.json({
+        jobId,
+        avatar,
+        clothing,
+      });
+    });
+
+    app.get("/job/:jobId", async (req, res) => {
+      const { jobId } = req.params;
+      const jobData = await redisClient.get(`job:${jobId}`);
+
+      if (!jobData) {
+        return res.status(404).json({ error: "Job not found" });
+      }
+
+      const job = JSON.parse(jobData);
+
+      if (job.status === "completed") {
+        // If job is completed, return the result
+        res.json({ status: "completed", result: job.result });
+      } else {
+        // If job is still pending, return the status
+        res.json({ status: "pending" });
+      }
+    });
+
+    // Start the server
+    app.listen(3001, () => console.log("Server running on port 3001"));
+
+    // Start processing jobs
+    processJobs();
+  } catch (error) {
+    console.error("Failed to connect to Redis:", error);
+    process.exit(1);
+  }
+};
+
+// This function simulates processing jobs from the queue
+// In a real-world scenario, this would be a separate worker process
+const processJobs = async () => {
+  while (true) {
+    try {
+      const job = await redisClient.lPop("try_on_queue");
+      if (job) {
+        const { jobId, avatar, clothing } = JSON.parse(job);
+        // Simulate processing time
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+
+        // Update job status to completed with a mock result
+        await redisClient.set(
+          `job:${jobId}`,
+          JSON.stringify({
+            status: "completed",
+            result: "https://example.com/processed-image.jpg",
+          })
+        );
+      } else {
+        // If no jobs in queue, wait before checking again
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+    } catch (error) {
+      console.error("Error processing job:", error);
+      // Wait a bit before trying again
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+    }
+  }
+};
+
+// Handle graceful shutdown when node is interrupted
+process.on("SIGINT", async () => {
+  console.log("Shutting down gracefully");
+  await redisClient.quit();
+  process.exit(0);
 });
 
-await redisClient.disconnect();
-app.listen(3001, () => console.log("Server running on port 3001"));
+// Start the server
+startServer();
