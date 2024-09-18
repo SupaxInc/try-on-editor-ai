@@ -30,14 +30,14 @@ const startServer = async () => {
       const jobId = Date.now().toString();
       const { avatar, clothing } = req.body;
 
-      // Add new job to Redis queue with named "try_on_queue", allows for FIFO
+      // Add new job to Redis queue with name "try_on_queue", allows for FIFO
       await redisClient.rPush(
         "try_on_queue",
         JSON.stringify({ jobId, avatar, clothing })
       );
 
       // Sets a key-value pair in redis of, key: job:{jobId} and value: {"status": "pending"}
-      // Setting the initial status of the recently added job in a separate key-value pairing
+      // Setting the initial status of the recently added job in a separate key-value table
       await redisClient.set(
         `job:${jobId}`,
         JSON.stringify({ status: "pending" })
@@ -50,26 +50,24 @@ const startServer = async () => {
       });
     });
 
+    // Used to poll async Redis job queue tasks
     app.get("/job/:jobId", async (req, res) => {
       const { jobId } = req.params;
-      const jobData = await redisClient.get(`job:${jobId}`);
-
-      if (!jobData) {
+      const newAvatarImage = await redisClient.get(`job:${jobId}`); // Grab the value of the job ID key
+      console.log(newAvatarImage);
+      if (!newAvatarImage) {
         return res.status(404).json({ error: "Job not found" });
       }
 
-      const job = JSON.parse(jobData);
+      const job = JSON.parse(newAvatarImage);
 
       if (job.status === "completed") {
-        // If job is completed, return the result
         res.json({ status: "completed", result: job.result });
       } else {
-        // If job is still pending, return the status
         res.json({ status: "pending" });
       }
     });
 
-    // Start the server
     app.listen(3001, () => console.log("Server running on port 3001"));
 
     // Start processing jobs
@@ -85,9 +83,11 @@ const startServer = async () => {
 const processJobs = async () => {
   while (true) {
     try {
+      // Removes the first job that was in from queue "try_on_queue"
       const job = await redisClient.lPop("try_on_queue");
+
       if (job) {
-        const { jobId, avatar, clothing } = JSON.parse(job);
+        const { jobId } = JSON.parse(job);
         // Simulate processing time
         await new Promise((resolve) => setTimeout(resolve, 5000));
 

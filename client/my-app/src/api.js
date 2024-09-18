@@ -18,7 +18,7 @@ export const triggerTryOn = async (charSprite, itemSprite, pixiApp) => {
       headers: { "Content-Type": "application/json" },
     });
 
-    const { jobId, avatar, clothing } = response.data;
+    const { jobId } = response.data;
     console.log(response.data);
 
     return pollJobResult(jobId);
@@ -29,7 +29,7 @@ export const triggerTryOn = async (charSprite, itemSprite, pixiApp) => {
 
 const pollJobResult = async (jobId) => {
   const maxAttempts = 30;
-  const pollInterval = 2000; // 2 seconds x 30 = 60 seconds max
+  const pollInterval = 2000; // 2 seconds x 30 = 60 seconds max of polling
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     try {

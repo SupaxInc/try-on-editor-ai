@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import Character from "../../components/character/Character";
 import { createSpriteFromFile } from "./helper";
