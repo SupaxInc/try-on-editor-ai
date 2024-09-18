@@ -8,6 +8,7 @@ import { createClient } from "redis";
 dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
 // Setup Redis
+// TODO: May need to change the environment variable to redis and change "redis" to localhost
 const REDIS_HOST = process.env.REDIS_HOST || "redis";
 const redisClient = createClient({
   host: REDIS_HOST,

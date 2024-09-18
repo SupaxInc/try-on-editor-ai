@@ -15,10 +15,10 @@ dotenv_path = root_dir / '.env'
 load_dotenv(dotenv_path)
 
 # Set up Redis connection
-redis_host = os.environ.get('REDIS_HOST', 'localhost')
+# TODO: May need to change the environment variable to redis and change "redis" to localhost
+redis_host = os.environ.get('REDIS_HOST', 'redis')
 redis_port = int(os.environ.get('REDIS_PORT', 6379))
-
-redis_client = redis.Redis(host=redis_host, port=redis_port, db=0)
+redis_client = redis.Redis(host=redis_host, port=redis_port, db=0) # Connect to the first redis DB (0th index)
 
 try:
     print(f"Connecting to Redis at {redis_host}:{redis_port}")
@@ -31,6 +31,17 @@ except redis.exceptions.ConnectionError as e:
 # Queue and job key prefixes
 QUEUE_NAME = 'try_on_queue'
 JOB_KEY_PREFIX = 'job:'
+
+def run_inference(avatar_image_bytes, clothing_image_bytes):
+    # TODO: Implement your ML model inference logic here
+    # For example:
+    # - Load the images from bytes
+    # - Process them with your ML model
+    # - Return the result image as bytes
+
+    # Placeholder implementation (just returns the avatar image)
+    print('successful inference!')
+    return avatar_image_bytes
 
 def process_job(job_data):
     job = json.loads(job_data)
