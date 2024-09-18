@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getBase64FromSprite } from "./pages/try-on-editor/helper";
 
 const API_BASE_URL = "http://localhost:3001";
 
@@ -24,18 +25,6 @@ export const triggerTryOn = async (charSprite, itemSprite, pixiApp) => {
   } catch (error) {
     console.error("Error triggering try-on:", error);
   }
-};
-
-// Convert a Pixi.js sprite's texture into a base64 string
-const getBase64FromSprite = async (sprite, pixiApp) => {
-  return new Promise((resolve) => {
-    // Extract the sprite's visual content as an image element from the Pixi.js renderer
-    // This is used to convert the sprite into a format that can be easily transformed into a base64 string
-    const spriteImage = pixiApp.renderer.extract.canvas(sprite);
-
-    // Convert the canvas content to a PNG image and remove the MIME type prefix
-    resolve(spriteImage.toDataURL("image/png").split(",")[1]);
-  });
 };
 
 const pollJobResult = async (jobId) => {

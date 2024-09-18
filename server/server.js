@@ -21,7 +21,6 @@ app.use(
   express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
 );
 
-// Connect to Redis before starting the server
 const startServer = async () => {
   try {
     await redisClient.connect();
@@ -112,7 +111,7 @@ const processJobs = async () => {
   }
 };
 
-// Handle graceful shutdown when node is interrupted
+// Handle graceful shutdown when node is interrupted (CTRL+C in terminal)
 process.on("SIGINT", async () => {
   console.log("Shutting down gracefully");
   await redisClient.quit();
