@@ -1,9 +1,11 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import path from "path";
 import { createClient } from "redis";
 
-dotenv.config();
+// Directly access the root folder to get the .env config from root
+dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
 // Setup Redis
 const REDIS_HOST = process.env.REDIS_HOST || "redis";
