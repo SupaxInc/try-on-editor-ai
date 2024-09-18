@@ -3,9 +3,16 @@ import time
 import json
 import base64
 import redis
+from dotenv import load_dotenv
+from pathlib import Path
 
 # Import your inference function (replace 'inference_script' with your actual script)
 # from inference_script import run_inference
+
+# Load .env file from the root folder
+root_dir = Path(__file__).parent.parent
+dotenv_path = root_dir / '.env'
+load_dotenv(dotenv_path)
 
 # Set up Redis connection
 redis_host = os.environ.get('REDIS_HOST', 'localhost')
