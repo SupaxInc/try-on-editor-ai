@@ -15,8 +15,7 @@ dotenv_path = root_dir / '.env'
 load_dotenv(dotenv_path)
 
 # Set up Redis connection
-# TODO: May need to change the environment variable to redis and change "redis" to localhost
-redis_host = os.environ.get('REDIS_HOST', 'redis')
+redis_host = 'localhost' if os.environ.get('NODE_ENV') != 'production' else os.environ.get('REDIS_HOST', 'redis')
 redis_port = int(os.environ.get('REDIS_PORT', 6379))
 redis_client = redis.Redis(host=redis_host, port=redis_port, db=0) # Connect to the first redis DB (0th index)
 
@@ -28,12 +27,8 @@ except redis.exceptions.ConnectionError as e:
     print("Cannot connect to Redis:", e)
     exit(1)
 
-# Queue and job key prefixes
-QUEUE_NAME = 'try_on_queue'
-JOB_KEY_PREFIX = 'job:'
-
 def run_inference(avatar_image_bytes, clothing_image_bytes):
-    # TODO: Implement your ML model inference logic here
+    # TODO: Implement ML model inference logic here
     # For example:
     # - Load the images from bytes
     # - Process them with your ML model
@@ -66,7 +61,7 @@ def process_job(job_data):
         'status': 'completed',
         'result': result_base64
     }
-    redis_client.set(JOB_KEY_PREFIX + job_id, json.dumps(job_result))
+    redis_client.set(os.environ.get('JOB_KEY_PREFIX') + job_id, json.dumps(job_result))
     print(f"Job {job_id} completed")
 
 if __name__ == '__main__':
@@ -74,7 +69,7 @@ if __name__ == '__main__':
     while True:
         try:
             # Wait for a job (blocking call with timeout)
-            job_entry = redis_client.blpop(QUEUE_NAME, timeout=5)
+            job_entry = redis_client.blpop(os.environ.get('TRY_ON_QUEUE_NAME'), timeout=5)
             if job_entry:
                 _, job_data = job_entry
                 process_job(job_data)

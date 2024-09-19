@@ -8,8 +8,8 @@ import { createClient } from "redis";
 dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
 // Setup Redis
-// TODO: May need to change the environment variable to redis and change "redis" to localhost
-const REDIS_HOST = process.env.REDIS_HOST || "redis";
+const REDIS_HOST =
+  process.env.NODE_ENV === "production" ? process.env.REDIS_HOST : "localhost";
 const redisClient = createClient({
   host: REDIS_HOST,
   port: process.env.REDIS_PORT,
@@ -35,14 +35,14 @@ const startServer = async () => {
 
       // Add new job to Redis queue with name "try_on_queue", allows for FIFO
       await redisClient.rPush(
-        "try_on_queue",
+        `${process.env.TRY_ON_QUEUE_NAME}`,
         JSON.stringify({ jobId, avatar, clothing })
       );
 
       // Sets a key-value pair in redis of, key: job:{jobId} and value: {"status": "pending"}
       // Setting the initial status of the recently added job in a separate key-value table
       await redisClient.set(
-        `job:${jobId}`,
+        `${process.env.JOB_KEY_PREFIX}${jobId}`,
         JSON.stringify({ status: "pending" })
       );
 
@@ -56,8 +56,10 @@ const startServer = async () => {
     // Used to poll async Redis job queue tasks
     app.get("/job/:jobId", async (req, res) => {
       const { jobId } = req.params;
-      const newAvatarImage = await redisClient.get(`job:${jobId}`); // Grab the value of the job ID key
-      console.log(newAvatarImage);
+      const newAvatarImage = await redisClient.get(
+        `${process.env.JOB_KEY_PREFIX}${jobId}`
+      ); // Grab the value of the job ID key
+
       if (!newAvatarImage) {
         return res.status(404).json({ error: "Job not found" });
       }
