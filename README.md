@@ -50,7 +50,7 @@ To start the local environment, follow these steps:
    - If the virtual environment doesn't exist, create it and install dependencies:
      ```
      python -m venv venv
-     source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+     source venv/Scripts/activate
      pip install -r requirements.txt
      ```
    - If the virtual environment already exists, just activate it:

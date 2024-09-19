@@ -6,28 +6,28 @@ import redis
 from dotenv import load_dotenv
 from pathlib import Path
 
-# Import your inference function (replace 'inference_script' with your actual script)
-# from inference_script import run_inference
+# TODO: Import your inference function (replace 'inferenceScript' with your actual script)
+# from inferenceScript import runInference
 
 # Load .env file from the root folder
-root_dir = Path(__file__).parent.parent
-dotenv_path = root_dir / '.env'
-load_dotenv(dotenv_path)
+rootDir = Path(__file__).parent.parent
+dotenvPath = rootDir / '.env'
+load_dotenv(dotenvPath)
 
 # Set up Redis connection
-redis_host = 'localhost' if os.environ.get('NODE_ENV') != 'production' else os.environ.get('REDIS_HOST', 'redis')
-redis_port = int(os.environ.get('REDIS_PORT', 6379))
-redis_client = redis.Redis(host=redis_host, port=redis_port, db=0) # Connect to the first redis DB (0th index)
+redisHost = 'localhost' if os.environ.get('NODE_ENV') != 'production' else os.environ.get('REDIS_HOST', 'redis')
+redisPort = int(os.environ.get('REDIS_PORT', 6379))
+redisClient = redis.Redis(host=redisHost, port=redisPort, db=0) # Connect to the first redis DB (0th index)
 
 try:
-    print(f"Connecting to Redis at {redis_host}:{redis_port}")
-    redis_client.ping()
+    print(f"Connecting to Redis at {redisHost}:{redisPort}")
+    redisClient.ping()
     print("Connected to Redis")
 except redis.exceptions.ConnectionError as e:
     print("Cannot connect to Redis:", e)
     exit(1)
 
-def run_inference(avatar_image_bytes, clothing_image_bytes):
+def runInference(avatarImageBytes, clothingImageBytes):
     # TODO: Implement ML model inference logic here
     # For example:
     # - Load the images from bytes
@@ -36,43 +36,44 @@ def run_inference(avatar_image_bytes, clothing_image_bytes):
 
     # Placeholder implementation (just returns the avatar image)
     print('successful inference!')
-    return avatar_image_bytes
+    return avatarImageBytes
 
-def process_job(job_data):
-    job = json.loads(job_data)
-    job_id = job['jobId']
-    avatar_base64 = job['avatar']
-    clothing_base64 = job['clothing']
+def processJob(jobData):
+    job = json.loads(jobData)
+    jobId = job['jobId']
+    avatarBase64 = job['avatar']
+    clothingBase64 = job['clothing']
     
-    print(f"Processing job {job_id}")
+    print(f"Processing job {jobId}")
     
     # Decode base64 images
-    avatar_image_bytes = base64.b64decode(avatar_base64)
-    clothing_image_bytes = base64.b64decode(clothing_base64)
+    avatarImageBytes = base64.b64decode(avatarBase64)
+    clothingImageBytes = base64.b64decode(clothingBase64)
     
-    # Run the ML inference (modify 'run_inference' according to your implementation)
-    result_image_bytes = run_inference(avatar_image_bytes, clothing_image_bytes)
+    # Run the ML inference (modify 'runInference' according to your implementation)
+    resultImageBytes = runInference(avatarImageBytes, clothingImageBytes)
     
     # Encode the result image back to base64
-    result_base64 = base64.b64encode(result_image_bytes).decode('utf-8')
+    resultBase64 = base64.b64encode(resultImageBytes).decode('utf-8')
     
     # Update job status and result in Redis
-    job_result = {
+    jobResult = {
         'status': 'completed',
-        'result': result_base64
+        'result': resultBase64
     }
-    redis_client.set(os.environ.get('JOB_KEY_PREFIX') + job_id, json.dumps(job_result))
-    print(f"Job {job_id} completed")
+    redisClient.set(os.environ.get('JOB_KEY_PREFIX') + jobId, json.dumps(jobResult))
+    print(f"Job {jobId} completed")
 
 if __name__ == '__main__':
     print("Worker started. Waiting for jobs...")
     while True:
         try:
             # Wait for a job (blocking call with timeout)
-            job_entry = redis_client.blpop(os.environ.get('TRY_ON_QUEUE_NAME'), timeout=5)
-            if job_entry:
-                _, job_data = job_entry
-                process_job(job_data)
+            jobEntry = redisClient.blpop(os.environ.get('TRY_ON_QUEUE_NAME'), timeout=5)
+            if jobEntry:
+                print(jobEntry)
+                _, jobData = jobEntry
+                processJob(jobData)
             else:
                 # No job found within the timeout period
                 time.sleep(1)
