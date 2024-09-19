@@ -55,6 +55,7 @@ def processJob(jobData):
     
     # Encode the result image back to base64
     resultBase64 = base64.b64encode(resultImageBytes).decode('utf-8')
+    resultBase64 = 'test' # TODO: Remove this test when proper inference has been placed
     
     # Update job status and result in Redis
     jobResult = {
@@ -68,13 +69,13 @@ if __name__ == '__main__':
     print("Worker started. Waiting for jobs...")
     while True:
         try:
-            # Wait for a job (blocking call with timeout)
+            # Blocking operation to wait for a job, only returns a job if it finds one or else it times out
             jobEntry = redisClient.blpop(os.environ.get('TRY_ON_QUEUE_NAME'), timeout=5)
             if jobEntry:
-                print(jobEntry)
                 _, jobData = jobEntry
                 processJob(jobData)
             else:
+                print('No job found! Sleeping...')
                 # No job found within the timeout period
                 time.sleep(1)
         except Exception as e:

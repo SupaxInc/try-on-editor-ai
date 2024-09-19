@@ -2,10 +2,13 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
+import { fileURLToPath } from "url";
 import { createClient } from "redis";
 
-// Directly access the root folder to get the .env config from root
-dotenv.config({ path: path.resolve(process.cwd(), ".env") });
+// Load .env file from the root folder
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, "..", ".env") });
 
 // Setup Redis
 const REDIS_HOST =
@@ -33,6 +36,9 @@ const startServer = async () => {
       const jobId = Date.now().toString();
       const { avatar, clothing } = req.body;
 
+      console.log(`${process.env.TRY_ON_QUEUE_NAME}`);
+      console.log(`${process.env.JOB_KEY_PREFIX}${jobId}`);
+
       // Add new job to Redis queue with name "try_on_queue", allows for FIFO
       await redisClient.rPush(
         `${process.env.TRY_ON_QUEUE_NAME}`,
@@ -56,15 +62,15 @@ const startServer = async () => {
     // Used to poll async Redis job queue tasks
     app.get("/job/:jobId", async (req, res) => {
       const { jobId } = req.params;
-      const newAvatarImage = await redisClient.get(
+      const jobValue = await redisClient.get(
         `${process.env.JOB_KEY_PREFIX}${jobId}`
-      ); // Grab the value of the job ID key
+      );
 
-      if (!newAvatarImage) {
+      if (!jobValue) {
         return res.status(404).json({ error: "Job not found" });
       }
 
-      const job = JSON.parse(newAvatarImage);
+      const job = JSON.parse(jobValue);
 
       if (job.status === "completed") {
         res.json({ status: "completed", result: job.result });
@@ -74,45 +80,9 @@ const startServer = async () => {
     });
 
     app.listen(3001, () => console.log("Server running on port 3001"));
-
-    // Start processing jobs
-    processJobs();
   } catch (error) {
     console.error("Failed to connect to Redis:", error);
     process.exit(1);
-  }
-};
-
-// This function simulates processing jobs from the queue
-// TODO: Replace this with a python worker
-const processJobs = async () => {
-  while (true) {
-    try {
-      // Removes the first job that was in from queue "try_on_queue"
-      const job = await redisClient.lPop("try_on_queue");
-
-      if (job) {
-        const { jobId } = JSON.parse(job);
-        // Simulate processing time
-        await new Promise((resolve) => setTimeout(resolve, 5000));
-
-        // Update job status to completed with a mock result
-        await redisClient.set(
-          `job:${jobId}`,
-          JSON.stringify({
-            status: "completed",
-            result: "https://example.com/processed-image.jpg",
-          })
-        );
-      } else {
-        // If no jobs in queue, wait before checking again
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-    } catch (error) {
-      console.error("Error processing job:", error);
-      // Wait a bit before trying again
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-    }
   }
 };
 
