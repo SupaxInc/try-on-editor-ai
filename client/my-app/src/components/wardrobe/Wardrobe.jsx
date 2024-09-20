@@ -19,7 +19,7 @@ const Wardrobe = ({ itemSprites }) => {
     usePixi();
   const totalItemsWidthRef = useRef(0);
 
-  // Initial setup of wardrobe container and items container
+  /* Initial setup of wardrobe container and items container */
   useEffect(() => {
     // Containers scales its resolution based on its children, so use graphics to create boundaries for wardrobe
     const setWardrobeBounds = (wardrobeContainer) => {
@@ -94,13 +94,13 @@ const Wardrobe = ({ itemSprites }) => {
     };
   }, [appRef, wardrobeContainerRef, itemsContainerRef]);
 
-  // Add newly uploaded item sprites to items container and add interactions
+  /* Add newly uploaded item sprites to items container and add interactions */
   useEffect(() => {
     if (!itemsContainerRef.current || itemSprites.length === 0) {
       return;
     }
 
-    const newItemSprite = itemSprites[itemSprites.length - 1]; // Last added sprite
+    const newItemSprite = itemSprites[itemSprites.length - 1]; // Get last added new sprite
     const characterSprite = charContainerRef.current.children.find(
       (child) => child.label === "characterSprite"
     );
@@ -120,7 +120,7 @@ const Wardrobe = ({ itemSprites }) => {
     newItemSprite.initialX = newPositionX;
     newItemSprite.initialY = itemsContainerRef.current.height / 2; // Middle of the items container
 
-    // Add interactions to the new item sprite
+    // Add wardrobe interactions to the new item sprite (wardrobe items)
     makeSpriteInteractive(newItemSprite, {
       onDropResetToInitial,
       isOnTopOfSprite,

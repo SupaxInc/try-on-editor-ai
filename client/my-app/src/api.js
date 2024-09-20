@@ -37,6 +37,7 @@ const pollJobResult = async (jobId) => {
       const { status, result } = response.data;
 
       if (status === "completed") {
+        console.log("Got result during polling. Success!");
         return result;
       }
 

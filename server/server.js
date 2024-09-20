@@ -36,10 +36,11 @@ const startServer = async () => {
       const jobId = Date.now().toString();
       const { avatar, clothing } = req.body;
 
-      console.log(`${process.env.TRY_ON_QUEUE_NAME}`);
-      console.log(`${process.env.JOB_KEY_PREFIX}${jobId}`);
-
       // Add new job to Redis queue with name "try_on_queue", allows for FIFO
+      console.log(
+        "Adding new job to Redis queue: ",
+        `${process.env.TRY_ON_QUEUE_NAME}`
+      );
       await redisClient.rPush(
         `${process.env.TRY_ON_QUEUE_NAME}`,
         JSON.stringify({ jobId, avatar, clothing })
@@ -52,11 +53,7 @@ const startServer = async () => {
         JSON.stringify({ status: "pending" })
       );
 
-      res.json({
-        jobId,
-        avatar,
-        clothing,
-      });
+      res.json({ jobId });
     });
 
     // Used to poll async Redis job queue tasks

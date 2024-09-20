@@ -75,7 +75,6 @@ if __name__ == '__main__':
                 _, jobData = jobEntry
                 processJob(jobData)
             else:
-                print('No job found! Sleeping...')
                 # No job found within the timeout period
                 time.sleep(1)
         except Exception as e:
