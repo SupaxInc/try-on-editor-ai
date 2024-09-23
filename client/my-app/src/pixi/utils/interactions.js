@@ -154,7 +154,8 @@ export const isOnTopOfSprite = (sprite, currentPosition) => {
 
 export const onDropOnSprite = (targetSprite, droppedSprite, callback, app) => {
   if (targetSprite && droppedSprite) {
-    // Delay the callback to ensure the sprite has been updated
+    // Delay the callback to ensure the sprite has been updated with correct states (alpha, states, cursor, etc)
+    // Could be an issue with the Javascript event loop when you change a property for a sprite, these changes are queued to be applied for next cycle
     setTimeout(() => {
       callback(targetSprite, droppedSprite, app);
     }, 0);
