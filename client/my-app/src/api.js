@@ -27,9 +27,10 @@ export const triggerTryOn = async (charSprite, itemSprite, pixiApp) => {
   }
 };
 
+// TODO: Maybe change this to a websocket/sse/long polling or just buy a better GPU lol
 const pollJobResult = async (jobId) => {
-  const maxAttempts = 30;
-  const pollInterval = 2000; // 2 seconds x 30 = 60 seconds max of polling
+  const maxAttempts = 90;
+  const pollInterval = 2000;
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     try {
