@@ -152,12 +152,40 @@ export const isOnTopOfSprite = (sprite, currentPosition) => {
   return spriteBounds.containsPoint(currentPosition.x, currentPosition.y);
 };
 
-export const onDropOnSprite = (targetSprite, droppedSprite, callback, app) => {
+export const onDropOnSprite = async (
+  targetSprite,
+  droppedSprite,
+  callback,
+  app
+) => {
   if (targetSprite && droppedSprite) {
-    // Delay the callback to ensure the sprite has been updated with correct states (alpha, states, cursor, etc)
-    // Could be an issue with the Javascript event loop when you change a property for a sprite, these changes are queued to be applied for next cycle
-    setTimeout(() => {
-      callback(targetSprite, droppedSprite, app);
-    }, 0);
+    // Delay the callback to ensure the sprite has been updated with correct states
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    console.log("HEre");
+    const newSprite = await callback(targetSprite, droppedSprite, app);
+    console.log("newSprite", newSprite);
+    if (newSprite) {
+      // Replace the old sprite with the new one
+      const parent = targetSprite.parent;
+      const index = parent.getChildIndex(targetSprite);
+
+      // Copy relevant properties from the old sprite
+      newSprite.x = targetSprite.x;
+      newSprite.y = targetSprite.y;
+      newSprite.width = targetSprite.width;
+      newSprite.height = targetSprite.height;
+      newSprite.scale.set(targetSprite.scale.x, targetSprite.scale.y);
+      newSprite.anchor.set(targetSprite.anchor.x, targetSprite.anchor.y);
+      newSprite.label = targetSprite.label;
+
+      // Remove the old sprite and add the new one
+      parent.removeChild(targetSprite);
+      parent.addChildAt(newSprite, index);
+
+      // Make the new sprite interactive
+      // makeSpriteInteractive(newSprite, {
+      //   // Add any necessary options here
+      // });
+    }
   }
 };

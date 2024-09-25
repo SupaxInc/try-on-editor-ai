@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Buffer, Sprite, Texture } from "pixi.js";
 import { getBase64FromSprite } from "./pages/try-on-editor/helper";
 
 const API_BASE_URL = "http://localhost:3001";
@@ -19,11 +20,47 @@ export const triggerTryOn = async (charSprite, itemSprite, pixiApp) => {
     });
 
     const { jobId } = response.data;
-    console.log(response.data);
 
-    return pollJobResult(jobId);
+    const newCharBase64 = await pollJobResult(jobId);
+    // Decode base64 string to binary buffer
+    const binaryString = atob(newCharBase64);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+
+    // Create an Image object to determine the actual dimensions
+    const img = new Image();
+    img.src = `data:image/jpeg;base64,${newCharBase64}`;
+
+    // Wait for the image to load
+    await new Promise((resolve, reject) => {
+      img.onload = resolve;
+      img.onerror = reject;
+    });
+
+    // Create a BufferSource from the buffer with the correct dimensions
+    const bufferSource = new Buffer({
+      data: bytes,
+      width: img.width,
+      height: img.height,
+    });
+
+    // Create a Texture from the BufferSource
+    const newCharTexture = new Texture(bufferSource);
+
+    // Create a Sprite from the Texture
+    const newCharSprite = new Sprite(newCharTexture);
+    newCharSprite.anchor.set(0.5);
+
+    // Log the new sprite
+    console.log("newCharSprite", newCharSprite);
+
+    return newCharSprite;
   } catch (error) {
     console.error("Error triggering try-on:", error);
+    throw error;
   }
 };
 
