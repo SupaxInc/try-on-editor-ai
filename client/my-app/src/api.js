@@ -22,7 +22,6 @@ export const triggerTryOn = async (charSprite, itemSprite, pixiApp) => {
     const { jobId } = response.data;
 
     const newCharBase64 = await pollJobResult(jobId);
-    console.log("newCharBase64", newCharBase64);
 
     // Create an Image object from the base64 string
     const img = new Image();

@@ -161,9 +161,7 @@ export const onDropOnSprite = async (
   if (targetSprite && droppedSprite) {
     // Delay the callback to ensure the sprite has been updated with correct states
     await new Promise((resolve) => setTimeout(resolve, 0));
-    console.log("HEre");
     const newSprite = await callback(targetSprite, droppedSprite, app);
-    console.log("newSprite", newSprite);
     if (newSprite) {
       // Copy properties from targetSprite to newSprite
       newSprite.x = targetSprite.x;
