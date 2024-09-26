@@ -165,20 +165,17 @@ export const onDropOnSprite = async (
     const newSprite = await callback(targetSprite, droppedSprite, app);
     console.log("newSprite", newSprite);
     if (newSprite) {
-      // Replace the old sprite with the new one
-      const parent = targetSprite.parent;
-      const index = parent.getChildIndex(targetSprite);
-
-      // Copy relevant properties from the old sprite
+      // Copy properties from targetSprite to newSprite
       newSprite.x = targetSprite.x;
       newSprite.y = targetSprite.y;
       newSprite.width = targetSprite.width;
       newSprite.height = targetSprite.height;
-      newSprite.scale.set(targetSprite.scale.x, targetSprite.scale.y);
       newSprite.anchor.set(targetSprite.anchor.x, targetSprite.anchor.y);
       newSprite.label = targetSprite.label;
 
       // Remove the old sprite and add the new one
+      const parent = targetSprite.parent;
+      const index = parent.getChildIndex(targetSprite);
       parent.removeChild(targetSprite);
       parent.addChildAt(newSprite, index);
 
