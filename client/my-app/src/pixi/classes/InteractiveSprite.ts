@@ -1,6 +1,5 @@
 import {
   Sprite,
-  Texture,
   Point,
   Container,
   Bounds,
@@ -24,8 +23,8 @@ export default class InteractiveSprite {
   private onResizeEnd?: (event: FederatedPointerEvent) => void;
   private onDrop?: (event: FederatedPointerEvent) => void;
 
-  constructor(texture: Texture, options: InteractiveSpriteOptions = {}) {
-    this.sprite = new Sprite(texture);
+  constructor(sprite: Sprite, options: InteractiveSpriteOptions = {}) {
+    this.sprite = sprite;
     this.options = {
       draggable: true,
       resizable: true,
