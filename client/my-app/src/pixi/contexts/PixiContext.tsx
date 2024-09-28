@@ -1,11 +1,17 @@
-import React, { createContext, useContext, useRef, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useRef,
+  ReactNode,
+  MutableRefObject,
+} from "react";
 import { Application, Container } from "pixi.js";
 
 interface PixiContextType {
-  appRef: React.RefObject<Application>;
-  charContainerRef: React.RefObject<Container>;
-  wardrobeContainerRef: React.RefObject<Container>;
-  itemsContainerRef: React.RefObject<Container>;
+  appRef: MutableRefObject<Application | null>;
+  charContainerRef: MutableRefObject<Container | null>;
+  wardrobeContainerRef: MutableRefObject<Container | null>;
+  itemsContainerRef: MutableRefObject<Container | null>;
 }
 
 const PixiContext = createContext<PixiContextType | undefined>(undefined);
