@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import PropTypes from "prop-types";
 
 import { Container, Graphics, Sprite } from "pixi.js";
-import { makeSpriteInteractive } from "../../pixi/utils/interactions";
 import { usePixi } from "../../pixi/contexts/PixiContext";
 import { scaleSpriteToFitContainer } from "../../pixi/utils/helper";
 import InteractiveSprite from "../../pixi/classes/InteractiveSprite";
