@@ -37,11 +37,10 @@ export default class InteractiveSprite {
 
   private initialize(): void {
     this.sprite.interactive = true;
-
-    this.sprite.cursor = "pointer";
     this.activeCorner = null;
 
     if (this.options.draggable) {
+      this.sprite.cursor = "pointer";
       this.enableDragging();
     }
 
@@ -108,6 +107,7 @@ export default class InteractiveSprite {
     this.sprite.on("pointerupoutside", this.onDragEnd);
   }
 
+  // TODO: Fix resizing, cursor not changing and its resizing too big
   private enableResizing(): void {
     this.onResizeStart = (event: FederatedPointerEvent): void => {
       const bounds: Bounds = this.sprite.getBounds();
