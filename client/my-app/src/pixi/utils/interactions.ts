@@ -1,0 +1,56 @@
+import { Sprite, Container } from "pixi.js";
+import { ItemSprite } from "../types";
+
+// Reset sprite to initial position when dropped
+export const onDropResetToInitial = (sprite: ItemSprite): void => {
+  sprite.x = sprite.initialX;
+  sprite.y = sprite.initialY;
+};
+
+// Check if the current position passed is on top of a specific sprite
+export const isOnTopOfSprite = (
+  sprite: Sprite | null,
+  currentPosition: { x: number; y: number }
+): boolean => {
+  if (!sprite) return false;
+
+  const spriteBounds = sprite.getBounds();
+  return spriteBounds.containsPoint(currentPosition.x, currentPosition.y);
+};
+
+export const onDropOnSprite = async (
+  targetSprite: Sprite,
+  droppedSprite: Sprite,
+  callback: (
+    targetSprite: Sprite,
+    droppedSprite: Sprite,
+    app: any
+  ) => Promise<Sprite | null>,
+  app: any
+): Promise<void> => {
+  if (targetSprite && droppedSprite) {
+    // Delay the callback to ensure the sprite has been updated with correct states
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const newSprite = await callback(targetSprite, droppedSprite, app);
+    if (newSprite) {
+      // Copy properties from targetSprite to newSprite
+      newSprite.x = targetSprite.x;
+      newSprite.y = targetSprite.y;
+      newSprite.width = targetSprite.width;
+      newSprite.height = targetSprite.height;
+      newSprite.anchor.set(targetSprite.anchor.x, targetSprite.anchor.y);
+      (newSprite as any).label = (targetSprite as any).label;
+
+      // Remove the old sprite and add the new one
+      const parent = targetSprite.parent as Container;
+      const index = parent.getChildIndex(targetSprite);
+      parent.removeChild(targetSprite);
+      parent.addChildAt(newSprite, index);
+
+      // Make the new sprite interactive
+      // makeSpriteInteractive(newSprite, {
+      //   // Add any necessary options here
+      // });
+    }
+  }
+};
