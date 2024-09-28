@@ -5,27 +5,6 @@ export interface InteractiveSpriteOptions {
   draggable?: boolean;
   resizable?: boolean;
   droppable?: boolean;
-  onDragStart?: (
-    sprite: InteractiveSprite,
-    event: FederatedPointerEvent
-  ) => void;
-  onDragMove?: (
-    sprite: InteractiveSprite,
-    event: FederatedPointerEvent
-  ) => void;
-  onDragEnd?: (sprite: InteractiveSprite, event: FederatedPointerEvent) => void;
-  onResizeStart?: (
-    sprite: InteractiveSprite,
-    event: FederatedPointerEvent
-  ) => void;
-  onResizeMove?: (
-    sprite: InteractiveSprite,
-    event: FederatedPointerEvent
-  ) => void;
-  onResizeEnd?: (
-    sprite: InteractiveSprite,
-    event: FederatedPointerEvent
-  ) => void;
   isOnTopOfSprite?: (targetSprite: Sprite, globalPosition: Point) => boolean;
   targetSprite?: Sprite;
   onDropOnSprite?: (

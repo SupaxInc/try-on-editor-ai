@@ -74,7 +74,7 @@ export default class InteractiveSprite {
       this.sprite.alpha = 0.5;
       this.sprite.cursor = "grabbing";
 
-      this.options.onDragStart?.(this, event);
+      this.onDragStart?.(event);
 
       event.stopPropagation();
     };
@@ -87,7 +87,7 @@ export default class InteractiveSprite {
         this.sprite.x = newPosition.x - pointerOffsetX;
         this.sprite.y = newPosition.y - pointerOffsetY;
 
-        this.options.onDragMove?.(this, event);
+        this.onDragMove?.(event);
       }
     };
 
@@ -97,7 +97,7 @@ export default class InteractiveSprite {
         this.sprite.alpha = 1;
         this.sprite.cursor = "pointer";
 
-        this.options.onDragEnd?.(this, event);
+        this.onDragEnd?.(event);
       }
     };
 
@@ -146,7 +146,7 @@ export default class InteractiveSprite {
 
       if (this.activeCorner) {
         this.isResizing = true;
-        this.options.onResizeStart?.(this, event);
+        this.onResizeStart?.(event);
 
         event.stopPropagation();
       }
@@ -158,7 +158,7 @@ export default class InteractiveSprite {
         const newPosition = event.getLocalPosition(parent);
         this.resizeSprite(newPosition, this.activeCorner);
 
-        this.options.onResizeMove?.(this, event);
+        this.onResizeMove?.(event);
       }
     };
 
@@ -168,7 +168,7 @@ export default class InteractiveSprite {
         this.activeCorner = null;
         this.sprite.cursor = "pointer";
 
-        this.options.onResizeEnd?.(this, event);
+        this.onResizeEnd?.(event);
       }
     };
 
