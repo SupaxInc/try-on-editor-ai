@@ -1,5 +1,5 @@
 import { Sprite } from "pixi.js";
-import { RESIZE_AREA_CORNER } from "../utils/constants";
+import { RESIZE_AREA_CORNER, RESIZE_AREA_MIN } from "../utils/constants";
 
 class InteractiveSprite {
   constructor(texture, options = {}) {
@@ -15,11 +15,11 @@ class InteractiveSprite {
   }
 
   initialize() {
-    this.interactive = true;
-    this.buttonMode = true;
+    this.sprite.interactive = true;
+    this.sprite.buttonMode = true;
 
     // Initial global states for the sprite, prevents interaction conflicts
-    this.cursor = "pointer";
+    this.sprite.cursor = "pointer";
     this._dragging = false;
     this._resizing = false;
     this.activeCorner = null;
@@ -81,6 +81,7 @@ class InteractiveSprite {
 
     this.onDragEnd = (event) => {
       if (this._dragging) {
+        // Reset global states
         this._dragging = false;
         this.sprite.alpha = 1;
         this.sprite.cursor = "pointer";
@@ -100,8 +101,8 @@ class InteractiveSprite {
 
   enableResizing() {
     this.onResizeStart = (event) => {
-      const bounds = this.getBounds();
-      const localPosition = event.data.getLocalPosition(this.parent);
+      const bounds = this.sprite.getBounds();
+      const localPosition = event.data.getLocalPosition(this.sprite.parent);
 
       // Check corners for resizing
       if (
@@ -109,21 +110,21 @@ class InteractiveSprite {
         Math.abs(localPosition.y - bounds.y) < RESIZE_AREA_CORNER
       ) {
         this.activeCorner = "top-left";
-        this.cursor = "nwse-resize";
+        this.sprite.cursor = "nwse-resize";
       } else if (
         Math.abs(localPosition.x - (bounds.x + bounds.width)) <
           RESIZE_AREA_CORNER &&
         Math.abs(localPosition.y - bounds.y) < RESIZE_AREA_CORNER
       ) {
         this.activeCorner = "top-right";
-        this.cursor = "nesw-resize";
+        this.sprite.cursor = "nesw-resize";
       } else if (
         Math.abs(localPosition.x - bounds.x) < RESIZE_AREA_CORNER &&
         Math.abs(localPosition.y - (bounds.y + bounds.height)) <
           RESIZE_AREA_CORNER
       ) {
         this.activeCorner = "bottom-left";
-        this.cursor = "nesw-resize";
+        this.sprite.cursor = "nesw-resize";
       } else if (
         Math.abs(localPosition.x - (bounds.x + bounds.width)) <
           RESIZE_AREA_CORNER &&
@@ -131,7 +132,7 @@ class InteractiveSprite {
           RESIZE_AREA_CORNER
       ) {
         this.activeCorner = "bottom-right";
-        this.cursor = "nwse-resize";
+        this.sprite.cursor = "nwse-resize";
       }
 
       if (this.activeCorner) {
@@ -139,13 +140,14 @@ class InteractiveSprite {
         if (this.options.onResizeStart) {
           this.options.onResizeStart(this, event);
         }
+
         event.stopPropagation();
       }
     };
 
     this.onResizeMove = (event) => {
       if (this._resizing) {
-        const newPosition = event.data.getLocalPosition(this.parent);
+        const newPosition = event.data.getLocalPosition(this.sprite.parent);
         this.resizeSprite(newPosition, this.activeCorner);
 
         if (this.options.onResizeMove) {
@@ -156,9 +158,10 @@ class InteractiveSprite {
 
     this.onResizeEnd = (event) => {
       if (this._resizing) {
+        // Reset global states
         this._resizing = false;
         this.activeCorner = null;
-        this.cursor = "pointer";
+        this.sprite.cursor = "pointer";
 
         if (this.options.onResizeEnd) {
           this.options.onResizeEnd(this, event);
@@ -172,16 +175,81 @@ class InteractiveSprite {
     this.on("pointerupoutside", this.onResizeEnd);
   }
 
-  resizeSprite(newPosition, corner) {
-    const minWidth = this.options.minWidth || RESIZE_AREA_MIN;
-    const minHeight = this.options.minHeight || RESIZE_AREA_MIN;
+  resizeSprite(sprite, newPosition, corner) {
+    const minWidth = this.sprite.minWidth || RESIZE_AREA_MIN;
+    const minHeight = this.sprite.minHeight || RESIZE_AREA_MIN;
 
-    // Resize logic based on active corner
     switch (corner) {
-      case "top-left":
-        // Similar resizing logic as before
+      case "top-left": {
+        // Calculate new width and height based on the difference between current position and new position
+        const newWidthTL = sprite.width + (sprite.x - newPosition.x);
+        const newHeightTL = sprite.height + (sprite.y - newPosition.y);
+
+        // If new width is greater than or equal to minimum width, update sprite's width and x position
+        if (newWidthTL >= minWidth) {
+          this.sprite.width = newWidthTL;
+          this.sprite.x = newPosition.x;
+        }
+        // If new height is greater than or equal to minimum height, update sprite's height and y position
+        if (newHeightTL >= minHeight) {
+          this.sprite.height = newHeightTL;
+          this.sprite.y = newPosition.y;
+        }
         break;
-      // Handle other corners...
+      }
+
+      case "top-right": {
+        // Calculate new width and height based on the difference between current position and new position
+        const newWidthTR = newPosition.x - sprite.x;
+        const newHeightTR = sprite.height + (sprite.y - newPosition.y);
+
+        // If new width is greater than or equal to minimum width, update sprite's width
+        if (newWidthTR >= minWidth) {
+          this.sprite.width = newWidthTR;
+        }
+        // If new height is greater than or equal to minimum height, update sprite's height and y position
+        if (newHeightTR >= minHeight) {
+          this.sprite.height = newHeightTR;
+          this.sprite.y = newPosition.y;
+        }
+        break;
+      }
+
+      case "bottom-left": {
+        // Calculate new width and height based on the difference between current position and new position
+        const newWidthBL = sprite.width + (sprite.x - newPosition.x);
+        const newHeightBL = newPosition.y - sprite.y;
+
+        // If new width is greater than or equal to minimum width, update sprite's width and x position
+        if (newWidthBL >= minWidth) {
+          this.sprite.width = newWidthBL;
+          this.sprite.x = newPosition.x;
+        }
+        // If new height is greater than or equal to minimum height, update sprite's height
+        if (newHeightBL >= minHeight) {
+          this.sprite.height = newHeightBL;
+        }
+        break;
+      }
+
+      case "bottom-right": {
+        // Calculate new width and height based on the difference between current position and new position
+        const newWidthBR = newPosition.x - sprite.x;
+        const newHeightBR = newPosition.y - sprite.y;
+
+        // If new width is greater than or equal to minimum width, update sprite's width
+        if (newWidthBR >= minWidth) {
+          this.sprite.width = newWidthBR;
+        }
+        // If new height is greater than or equal to minimum height, update sprite's height
+        if (newHeightBR >= minHeight) {
+          this.sprite.height = newHeightBR;
+        }
+        break;
+      }
+
+      default:
+        break;
     }
   }
 }
