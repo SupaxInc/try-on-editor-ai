@@ -58,8 +58,11 @@ const Character = ({ charSprite }) => {
       charSprite.y = charContainerRef.current.height / 2;
       scaleSpriteToFitContainer(charSprite, charContainerRef, 50);
 
-      const interactiveChar = new InteractiveSprite(charSprite);
-      charContainerRef.current.addChild(interactiveChar.sprite);
+      const interactiveChar = new InteractiveSprite(charSprite, {
+        draggable: false,
+        resizable: false,
+      });
+      charContainerRef.current.addChild(interactiveChar.getSprite());
     }
   }, [charSprite, charContainerRef]);
 
