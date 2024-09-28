@@ -5,7 +5,7 @@ import {
   Bounds,
   FederatedPointerEvent,
 } from "pixi.js";
-import { RESIZE_AREA_CORNER, RESIZE_AREA_MIN } from "../utils/constants";
+import { RESIZE_AREA_CORNER, RESIZE_AREA_MIN } from "../../utils/constants";
 import { InteractiveSpriteOptions, ResizeCorner } from "./types";
 
 export default class InteractiveSprite {

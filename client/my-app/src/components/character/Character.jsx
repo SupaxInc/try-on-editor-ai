@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Container, Graphics, Sprite } from "pixi.js";
 import { usePixi } from "../../pixi/contexts/PixiContext";
 import { scaleSpriteToFitContainer } from "../../pixi/utils/helper";
-import InteractiveSprite from "../../pixi/classes/InteractiveSprite";
+import InteractiveSprite from "../../pixi/classes/InteractiveSprite/InteractiveSprite";
 
 // TODO: Make graphics more performant
 
