@@ -1,5 +1,5 @@
 import { Container, Graphics, Sprite, Texture, Application } from "pixi.js";
-import { AllSetupSprites } from "../types";
+import { AllSetupSprites, ItemSprite } from "../types";
 import { MutableRefObject } from "react";
 
 export const drawDebugBounds = (container: Container): void => {
@@ -13,9 +13,13 @@ export const drawDebugBounds = (container: Container): void => {
 // TODO: Possibly add responsive scaling?
 export const scaleSpriteToFitContainer = (
   sprite: Sprite,
-  containerRef: MutableRefObject<Container>,
+  containerRef: MutableRefObject<Container | null>,
   padding: number = 0
 ): void => {
+  if (!containerRef.current) {
+    return;
+  }
+
   // Add padding to the container width and height, multiply by 2 to account for top/bottom, left/right sides.
   // Adds padding to container to effectively make container smaller or bigger for better scaling
   const effectiveWidth = containerRef.current.width - padding * 2;
@@ -48,4 +52,8 @@ export const getApplicationFromSprite = (
     current = current.parent;
   }
   return null;
+};
+
+export const isItemSprite = (sprite: AllSetupSprites): sprite is ItemSprite => {
+  return "initialX" in sprite && "initialY" in sprite;
 };
