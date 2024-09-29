@@ -20,14 +20,6 @@ export default class InteractiveSprite {
   private isResizing: boolean = false;
   private activeCorner: ResizeCorner = null;
 
-  private onDragStart?: (event: FederatedPointerEvent) => void;
-  private onDragMove?: (event: FederatedPointerEvent) => void;
-  private onDragEnd?: (event: FederatedPointerEvent) => void;
-  private onResizeStart?: (event: FederatedPointerEvent) => void;
-  private onResizeMove?: (event: FederatedPointerEvent) => void;
-  private onResizeEnd?: (event: FederatedPointerEvent) => void;
-  private onDrop?: (event: FederatedPointerEvent) => void;
-
   constructor(sprite: AllSetupSprites, options: InteractiveSpriteOptions = {}) {
     this.sprite = sprite;
     this.options = {
@@ -68,7 +60,7 @@ export default class InteractiveSprite {
     let pointerOffsetX: number;
     let pointerOffsetY: number;
 
-    this.onDragStart = (event: FederatedPointerEvent): void => {
+    const onDragStart = (event: FederatedPointerEvent): void => {
       if (this.isResizing) return;
 
       const parent = this.sprite.parent as Container;
@@ -80,25 +72,19 @@ export default class InteractiveSprite {
       this.isDragging = true;
       this.sprite.alpha = 0.5;
       this.sprite.cursor = "grabbing";
-
-      this.onDragStart?.(event);
-
-      event.stopPropagation();
     };
 
-    this.onDragMove = (event: FederatedPointerEvent): void => {
+    const onDragMove = (event: FederatedPointerEvent): void => {
       if (this.isDragging) {
         const parent = this.sprite.parent as Container;
         const newPosition = event.getLocalPosition(parent);
 
         this.sprite.x = newPosition.x - pointerOffsetX;
         this.sprite.y = newPosition.y - pointerOffsetY;
-
-        this.onDragMove?.(event);
       }
     };
 
-    this.onDragEnd = (event: FederatedPointerEvent): void => {
+    const onDragEnd = (event: FederatedPointerEvent): void => {
       if (this.isDragging) {
         this.isDragging = false;
         this.sprite.alpha = 1;
@@ -107,20 +93,18 @@ export default class InteractiveSprite {
         if (this.options.onDropResetToInitial && isItemSprite(this.sprite)) {
           this.options.onDropResetToInitial?.(this.sprite);
         }
-
-        this.onDragEnd?.(event);
       }
     };
 
-    this.sprite.on("pointerdown", this.onDragStart);
-    this.sprite.on("pointermove", this.onDragMove);
-    this.sprite.on("pointerup", this.onDragEnd);
-    this.sprite.on("pointerupoutside", this.onDragEnd);
+    this.sprite.on("pointerdown", onDragStart);
+    this.sprite.on("pointermove", onDragMove);
+    this.sprite.on("pointerup", onDragEnd);
+    this.sprite.on("pointerupoutside", onDragEnd);
   }
 
   // TODO: Fix resizing, cursor not changing and its resizing too big
   private enableResizing(): void {
-    this.onResizeStart = (event: FederatedPointerEvent): void => {
+    const onResizeStart = (event: FederatedPointerEvent): void => {
       const bounds: Bounds = this.sprite.getBounds();
       const parent = this.sprite.parent as Container;
       const localPosition = event.getLocalPosition(parent);
@@ -157,40 +141,33 @@ export default class InteractiveSprite {
 
       if (this.activeCorner) {
         this.isResizing = true;
-        this.onResizeStart?.(event);
-
-        event.stopPropagation();
       }
     };
 
-    this.onResizeMove = (event: FederatedPointerEvent): void => {
+    const onResizeMove = (event: FederatedPointerEvent): void => {
       if (this.isResizing) {
         const parent = this.sprite.parent as Container;
         const newPosition = event.getLocalPosition(parent);
         this.resizeSprite(newPosition, this.activeCorner);
-
-        this.onResizeMove?.(event);
       }
     };
 
-    this.onResizeEnd = (event: FederatedPointerEvent): void => {
+    const onResizeEnd = (event: FederatedPointerEvent): void => {
       if (this.isResizing) {
         this.isResizing = false;
         this.activeCorner = null;
         this.sprite.cursor = "pointer";
-
-        this.onResizeEnd?.(event);
       }
     };
 
-    this.sprite.on("pointerdown", this.onResizeStart);
-    this.sprite.on("pointermove", this.onResizeMove);
-    this.sprite.on("pointerup", this.onResizeEnd);
-    this.sprite.on("pointerupoutside", this.onResizeEnd);
+    this.sprite.on("pointerdown", onResizeStart);
+    this.sprite.on("pointermove", onResizeMove);
+    this.sprite.on("pointerup", onResizeEnd);
+    this.sprite.on("pointerupoutside", onResizeEnd);
   }
 
   private enableDropping(): void {
-    this.onDrop = (event: FederatedPointerEvent): void => {
+    const onDrop = (event: FederatedPointerEvent): void => {
       const globalPosition = event.global;
 
       if (this.options.isOnTopOfSprite && this.options.targetSprite) {
@@ -205,7 +182,7 @@ export default class InteractiveSprite {
       }
     };
 
-    this.sprite.on("pointerup", this.onDrop);
+    this.sprite.on("pointerup", onDrop);
   }
 
   /**
