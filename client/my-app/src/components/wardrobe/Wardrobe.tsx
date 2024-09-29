@@ -17,8 +17,13 @@ import {
 } from "../../pixi/types";
 
 const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
-  const { wardrobeContainerRef, appRef, itemsContainerRef, charContainerRef } =
-    usePixi();
+  const {
+    wardrobeContainerRef,
+    appRef,
+    itemsContainerRef,
+    charContainerRef,
+    interactiveCharRef,
+  } = usePixi();
 
   const totalItemsWidthRef = useRef<number>(0);
 
@@ -131,13 +136,29 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
         onDropResetToInitial,
         isOnTopOfSprite,
         targetSprite: characterSprite,
-        onDropOnSprite: (droppedSprite: AllSetupSprites, app: Application) =>
-          onDropOnSpriteTryOn(
-            characterSprite,
-            droppedSprite,
-            triggerTryOn,
-            app
-          ),
+        onDropOnSprite: async (
+          droppedSprite: AllSetupSprites,
+          app: Application
+        ) => {
+          try {
+            interactiveCharRef.current?.setLoading(true);
+
+            const newSprite = await onDropOnSpriteTryOn(
+              characterSprite,
+              droppedSprite,
+              triggerTryOn,
+              app
+            );
+            interactiveCharRef.current?.setLoading(false);
+            return newSprite;
+          } catch (error) {
+            console.error(error);
+          } finally {
+            interactiveCharRef.current?.setLoading(false);
+          }
+
+          return null;
+        },
       }
     );
 

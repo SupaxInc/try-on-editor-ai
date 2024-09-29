@@ -10,6 +10,7 @@ import { RESIZE_AREA_CORNER, RESIZE_AREA_MIN } from "../../utils/constants";
 import { InteractiveSpriteOptions, ResizeCorner } from "./types";
 import { AllSetupSprites } from "../../types";
 import { isItemSprite } from "../../utils/helper";
+import { showLoadingCircleSpinner } from "../../utils/animations";
 
 // TODO: ADD A LOADING STATE TO THE INTERACTIVE SPRITE
 export default class InteractiveSprite {
@@ -20,7 +21,11 @@ export default class InteractiveSprite {
   // Initial states of the sprite, used to check for conflicts during interactions
   private isDragging: boolean = false;
   private isResizing: boolean = false;
+  private isLoading: boolean = false;
   private activeCorner: ResizeCorner = null;
+
+  // Animation states of the sprite
+  private loadingSpinnerContainer: Container | null = null;
 
   constructor(
     sprite: AllSetupSprites,
@@ -61,6 +66,23 @@ export default class InteractiveSprite {
 
   public getSprite(): Sprite {
     return this.sprite;
+  }
+
+  public setLoading(loading: boolean): void {
+    if (loading) {
+      this.isLoading = true;
+      this.loadingSpinnerContainer = showLoadingCircleSpinner(
+        this.sprite,
+        this.app
+      );
+      this.sprite.alpha = 0.5;
+      this.sprite.cursor = "wait";
+    } else {
+      this.isLoading = false;
+      this.loadingSpinnerContainer?.destroy();
+      this.sprite.alpha = 1;
+      this.sprite.cursor = "pointer";
+    }
   }
 
   private enableDragging(): void {

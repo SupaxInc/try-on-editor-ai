@@ -1,4 +1,4 @@
-import { Sprite, Container, Application } from "pixi.js";
+import { Sprite, Container, Application, Ticker } from "pixi.js";
 import { AllSetupSprites, ItemSprite } from "../types";
 
 // Reset sprite to initial position when dropped

@@ -9,7 +9,7 @@ import InteractiveSprite from "../../pixi/classes/InteractiveSprite/InteractiveS
 // TODO: Make graphics more performant
 
 const Character = ({ charSprite }) => {
-  const { appRef, charContainerRef } = usePixi();
+  const { appRef, charContainerRef, interactiveCharRef } = usePixi();
 
   useEffect(() => {
     const setupCharContainer = () => {
@@ -63,8 +63,9 @@ const Character = ({ charSprite }) => {
         resizable: false,
       });
       charContainerRef.current.addChild(interactiveChar.getSprite());
+      interactiveCharRef.current = interactiveChar;
     }
-  }, [charSprite, charContainerRef]);
+  }, [charSprite, charContainerRef, interactiveCharRef]);
 
   return null; // No DOM output
 };

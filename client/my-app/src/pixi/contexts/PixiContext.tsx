@@ -6,10 +6,12 @@ import React, {
   MutableRefObject,
 } from "react";
 import { Application, Container } from "pixi.js";
+import InteractiveSprite from "../classes/InteractiveSprite/InteractiveSprite";
 
 interface PixiContextType {
   appRef: MutableRefObject<Application | null>;
   charContainerRef: MutableRefObject<Container | null>;
+  interactiveCharRef: MutableRefObject<InteractiveSprite | null>;
   wardrobeContainerRef: MutableRefObject<Container | null>;
   itemsContainerRef: MutableRefObject<Container | null>;
 }
@@ -33,7 +35,7 @@ export const PixiProvider: React.FC<PixiProviderProps> = ({ children }) => {
   const charContainerRef = useRef<Container>(null);
   const wardrobeContainerRef = useRef<Container>(null);
   const itemsContainerRef = useRef<Container>(null);
-
+  const interactiveCharRef = useRef<InteractiveSprite>(null);
   return (
     <PixiContext.Provider
       value={{
@@ -41,6 +43,7 @@ export const PixiProvider: React.FC<PixiProviderProps> = ({ children }) => {
         charContainerRef,
         wardrobeContainerRef,
         itemsContainerRef,
+        interactiveCharRef,
       }}
     >
       {children}
