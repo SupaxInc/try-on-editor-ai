@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Container, Graphics, Sprite } from "pixi.js";
+import { Application, Container, Graphics, Sprite } from "pixi.js";
 import { usePixi } from "../../pixi/contexts/PixiContext";
 import {
   isOnTopOfSprite,
@@ -107,7 +107,7 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
       (child) => (child as Sprite).label === "characterSprite"
     ) as CharacterSprite;
 
-    if (!characterSprite) {
+    if (!characterSprite || !appRef.current) {
       return;
     }
 
@@ -122,14 +122,24 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
     newItemSprite.initialX = newPositionX;
     newItemSprite.initialY = itemsContainerRef.current.height / 2;
 
-    const newInteractiveItem = new InteractiveSprite(newItemSprite, {
-      resizable: false,
-      onDropResetToInitial,
-      isOnTopOfSprite,
-      targetSprite: characterSprite,
-      onDropOnSprite: (droppedSprite: AllSetupSprites) =>
-        onDropOnSpriteTryOn(characterSprite, droppedSprite, triggerTryOn),
-    });
+    const newInteractiveItem = new InteractiveSprite(
+      newItemSprite,
+      appRef.current,
+      {
+        resizable: false,
+        droppable: true,
+        onDropResetToInitial,
+        isOnTopOfSprite,
+        targetSprite: characterSprite,
+        onDropOnSprite: (droppedSprite: AllSetupSprites, app: Application) =>
+          onDropOnSpriteTryOn(
+            characterSprite,
+            droppedSprite,
+            triggerTryOn,
+            app
+          ),
+      }
+    );
 
     itemsContainerRef.current.addChild(newInteractiveItem.getSprite());
 

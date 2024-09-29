@@ -21,15 +21,17 @@ export const isOnTopOfSprite = (
 export const onDropOnSpriteTryOn = async (
   targetSprite: AllSetupSprites,
   droppedSprite: AllSetupSprites,
-  callback: (
+  triggerTryOn: (
     targetSprite: AllSetupSprites,
-    droppedSprite: AllSetupSprites
-  ) => Promise<Sprite | null>
+    droppedSprite: AllSetupSprites,
+    app: Application
+  ) => Promise<Sprite | null>,
+  app: Application
 ): Promise<Sprite | null> => {
   if (targetSprite && droppedSprite) {
     // Delay the callback to ensure the sprite has been updated with correct states
     await new Promise((resolve) => setTimeout(resolve, 0));
-    const newSprite = await callback(targetSprite, droppedSprite);
+    const newSprite = await triggerTryOn(targetSprite, droppedSprite, app);
     if (newSprite) {
       // Copy properties from targetSprite to newSprite
       newSprite.x = targetSprite.x;

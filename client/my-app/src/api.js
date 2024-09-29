@@ -1,14 +1,12 @@
 import axios from "axios";
 import { Sprite, Texture } from "pixi.js";
 import { getBase64FromSprite } from "./pages/try-on-editor/helper";
-import { getApplicationFromSprite } from "./pixi/utils/helper";
 
 const API_BASE_URL = "http://localhost:3001";
 
 // TODO: Think of ways to increase performance here, maybe cache avatar/items or save avatar states in the DB
-export const triggerTryOn = async (charSprite, itemSprite) => {
+export const triggerTryOn = async (charSprite, itemSprite, pixiApp) => {
   try {
-    const pixiApp = getApplicationFromSprite(charSprite);
     const charBase64 = await getBase64FromSprite(charSprite, pixiApp);
     const itemBase64 = await getBase64FromSprite(itemSprite, pixiApp);
 

@@ -1,4 +1,4 @@
-import { FederatedPointerEvent, Point, Sprite } from "pixi.js";
+import { Application, FederatedPointerEvent, Point, Sprite } from "pixi.js";
 import {
   isOnTopOfSprite,
   onDropResetToInitial,
@@ -11,7 +11,10 @@ export interface InteractiveSpriteOptions {
   droppable?: boolean;
   isOnTopOfSprite?: typeof isOnTopOfSprite;
   targetSprite?: AllSetupSprites;
-  onDropOnSprite?: (sprite: AllSetupSprites) => Promise<Sprite | null>;
+  onDropOnSprite?: (
+    sprite: AllSetupSprites,
+    app: Application
+  ) => Promise<Sprite | null>;
   onDropResetToInitial?: typeof onDropResetToInitial;
 }
 

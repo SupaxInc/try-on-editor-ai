@@ -4,6 +4,7 @@ import {
   Container,
   Bounds,
   FederatedPointerEvent,
+  Application,
 } from "pixi.js";
 import { RESIZE_AREA_CORNER, RESIZE_AREA_MIN } from "../../utils/constants";
 import { InteractiveSpriteOptions, ResizeCorner } from "./types";
@@ -13,6 +14,7 @@ import { isItemSprite } from "../../utils/helper";
 // TODO: ADD A LOADING STATE TO THE INTERACTIVE SPRITE
 export default class InteractiveSprite {
   private sprite: AllSetupSprites;
+  private app: Application;
   private options: InteractiveSpriteOptions;
 
   // Initial states of the sprite, used to check for conflicts during interactions
@@ -20,8 +22,13 @@ export default class InteractiveSprite {
   private isResizing: boolean = false;
   private activeCorner: ResizeCorner = null;
 
-  constructor(sprite: AllSetupSprites, options: InteractiveSpriteOptions = {}) {
+  constructor(
+    sprite: AllSetupSprites,
+    app: Application,
+    options: InteractiveSpriteOptions = {}
+  ) {
     this.sprite = sprite;
+    this.app = app;
     this.options = {
       draggable: true,
       resizable: true,
@@ -177,7 +184,7 @@ export default class InteractiveSprite {
             globalPosition
           )
         ) {
-          this.options.onDropOnSprite?.(this.sprite);
+          this.options.onDropOnSprite?.(this.sprite, this.app);
         }
       }
     };

@@ -41,19 +41,6 @@ export const scaleSpriteToFitContainer = (
   sprite.scale.set(scale);
 };
 
-export const getApplicationFromSprite = (
-  sprite: AllSetupSprites
-): Application | null => {
-  let current: Container | null = sprite;
-  while (current) {
-    if ("stage" in current) {
-      return (current as any).stage.application as Application;
-    }
-    current = current.parent;
-  }
-  return null;
-};
-
 export const isItemSprite = (sprite: AllSetupSprites): sprite is ItemSprite => {
   return "initialX" in sprite && "initialY" in sprite;
 };
