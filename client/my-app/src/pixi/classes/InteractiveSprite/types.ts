@@ -1,17 +1,18 @@
 import { FederatedPointerEvent, Point, Sprite } from "pixi.js";
-import InteractiveSprite from "./InteractiveSprite";
+import {
+  isOnTopOfSprite,
+  onDropResetToInitial,
+} from "../../utils/interactions";
+import { AllSetupSprites } from "../../types";
 
 export interface InteractiveSpriteOptions {
   draggable?: boolean;
   resizable?: boolean;
   droppable?: boolean;
-  isOnTopOfSprite?: (targetSprite: Sprite, globalPosition: Point) => boolean;
-  targetSprite?: Sprite;
-  onDropOnSprite?: (
-    sprite: InteractiveSprite,
-    targetSprite: Sprite,
-    event: FederatedPointerEvent
-  ) => void;
+  isOnTopOfSprite?: typeof isOnTopOfSprite;
+  targetSprite?: AllSetupSprites;
+  onDropOnSprite?: (sprite: AllSetupSprites) => Promise<Sprite | null>;
+  onDropResetToInitial?: typeof onDropResetToInitial;
 }
 
 export type ResizeCorner =

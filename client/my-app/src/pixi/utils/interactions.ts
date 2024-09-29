@@ -1,5 +1,5 @@
-import { Sprite, Container } from "pixi.js";
-import { ItemSprite } from "../types";
+import { Sprite, Container, Application } from "pixi.js";
+import { AllSetupSprites, ItemSprite } from "../types";
 
 // Reset sprite to initial position when dropped
 export const onDropResetToInitial = (sprite: ItemSprite): void => {
@@ -18,20 +18,18 @@ export const isOnTopOfSprite = (
   return spriteBounds.containsPoint(currentPosition.x, currentPosition.y);
 };
 
-export const onDropOnSprite = async (
-  targetSprite: Sprite,
-  droppedSprite: Sprite,
+export const onDropOnSpriteTryOn = async (
+  targetSprite: AllSetupSprites,
+  droppedSprite: AllSetupSprites,
   callback: (
-    targetSprite: Sprite,
-    droppedSprite: Sprite,
-    app: any
-  ) => Promise<Sprite | null>,
-  app: any
-): Promise<void> => {
+    targetSprite: AllSetupSprites,
+    droppedSprite: AllSetupSprites
+  ) => Promise<Sprite | null>
+): Promise<Sprite | null> => {
   if (targetSprite && droppedSprite) {
     // Delay the callback to ensure the sprite has been updated with correct states
     await new Promise((resolve) => setTimeout(resolve, 0));
-    const newSprite = await callback(targetSprite, droppedSprite, app);
+    const newSprite = await callback(targetSprite, droppedSprite);
     if (newSprite) {
       // Copy properties from targetSprite to newSprite
       newSprite.x = targetSprite.x;
@@ -51,6 +49,9 @@ export const onDropOnSprite = async (
       // makeSpriteInteractive(newSprite, {
       //   // Add any necessary options here
       // });
+
+      return newSprite;
     }
   }
+  return null;
 };

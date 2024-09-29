@@ -7,10 +7,15 @@ import {
 } from "pixi.js";
 import { RESIZE_AREA_CORNER, RESIZE_AREA_MIN } from "../../utils/constants";
 import { InteractiveSpriteOptions, ResizeCorner } from "./types";
+import { AllSetupSprites } from "../../types";
+import { isItemSprite } from "../../utils/helper";
 
+// TODO: ADD A LOADING STATE TO THE INTERACTIVE SPRITE
 export default class InteractiveSprite {
-  private sprite: Sprite;
+  private sprite: AllSetupSprites;
   private options: InteractiveSpriteOptions;
+
+  // Initial states of the sprite, used to check for conflicts during interactions
   private isDragging: boolean = false;
   private isResizing: boolean = false;
   private activeCorner: ResizeCorner = null;
@@ -23,7 +28,7 @@ export default class InteractiveSprite {
   private onResizeEnd?: (event: FederatedPointerEvent) => void;
   private onDrop?: (event: FederatedPointerEvent) => void;
 
-  constructor(sprite: Sprite, options: InteractiveSpriteOptions = {}) {
+  constructor(sprite: AllSetupSprites, options: InteractiveSpriteOptions = {}) {
     this.sprite = sprite;
     this.options = {
       draggable: true,
@@ -38,6 +43,8 @@ export default class InteractiveSprite {
   private initialize(): void {
     this.sprite.interactive = true;
     this.activeCorner = null;
+    this.isDragging = false;
+    this.isResizing = false;
 
     if (this.options.draggable) {
       this.sprite.cursor = "pointer";
@@ -96,6 +103,10 @@ export default class InteractiveSprite {
         this.isDragging = false;
         this.sprite.alpha = 1;
         this.sprite.cursor = "pointer";
+
+        if (this.options.onDropResetToInitial && isItemSprite(this.sprite)) {
+          this.options.onDropResetToInitial?.(this.sprite);
+        }
 
         this.onDragEnd?.(event);
       }
@@ -189,7 +200,7 @@ export default class InteractiveSprite {
             globalPosition
           )
         ) {
-          this.options.onDropOnSprite?.(this, this.options.targetSprite, event);
+          this.options.onDropOnSprite?.(this.sprite);
         }
       }
     };
