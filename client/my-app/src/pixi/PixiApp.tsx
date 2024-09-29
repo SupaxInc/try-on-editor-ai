@@ -21,7 +21,7 @@ const PixiApp: React.FC<{ children: ReactNode }> = ({ children }) => {
         containerRef.current.appendChild(app.canvas);
         appRef.current = app;
         (window as any).__PIXI_APP__ = app; // TODO: Remove when debugging on PixiJS extension is done
-        setIsReady(true);
+        setIsReady(true); // TODO: Add a spinner here
       }
     };
 
