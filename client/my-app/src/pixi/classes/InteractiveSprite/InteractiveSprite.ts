@@ -8,13 +8,14 @@ import {
 } from "pixi.js";
 import { RESIZE_AREA_CORNER, RESIZE_AREA_MIN } from "../../utils/constants";
 import { InteractiveSpriteOptions, ResizeCorner } from "./types";
-import { AllSetupSprites } from "../../types";
+import { AllSetupSprites, NamedContainer } from "../../types";
 import { isItemSprite } from "../../utils/helper";
 import { showLoadingCircleSpinner } from "../../utils/animations";
 
 // TODO: ADD A LOADING STATE TO THE INTERACTIVE SPRITE
 export default class InteractiveSprite {
   private sprite: AllSetupSprites;
+  private container: NamedContainer;
   private app: Application;
   private options: InteractiveSpriteOptions;
 
@@ -30,9 +31,14 @@ export default class InteractiveSprite {
   constructor(
     sprite: AllSetupSprites,
     app: Application,
+    name: string,
     options: InteractiveSpriteOptions = {}
   ) {
+    this.container = new Container() as NamedContainer;
+    this.container.label = `${name.toLowerCase()}SpriteContainer`;
+
     this.sprite = sprite;
+
     this.app = app;
     this.options = {
       draggable: true,
@@ -45,6 +51,7 @@ export default class InteractiveSprite {
   }
 
   private initialize(): void {
+    this.container.addChild(this.sprite);
     this.sprite.interactive = true;
     this.activeCorner = null;
     this.isDragging = false;

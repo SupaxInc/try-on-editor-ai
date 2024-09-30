@@ -140,6 +140,7 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
     const newInteractiveItem = new InteractiveSprite(
       newItemSprite,
       appRef.current,
+      "item",
       {
         resizable: false,
         droppable: true,

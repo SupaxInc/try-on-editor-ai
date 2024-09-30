@@ -24,6 +24,7 @@ const Character: FC<{ charSprite: Sprite }> = ({ charSprite }) => {
       const interactiveChar = new InteractiveSprite(
         charSprite as CharacterSprite,
         appRef.current,
+        "character",
         {
           draggable: false,
           resizable: false,
