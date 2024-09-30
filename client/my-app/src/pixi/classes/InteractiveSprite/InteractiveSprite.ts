@@ -84,7 +84,8 @@ export default class InteractiveSprite {
       this.isLoading = true;
       this.loadingSpinnerContainer = showLoadingCircleSpinner(
         this.sprite,
-        this.app
+        this.app,
+        this.container
       );
       this.sprite.alpha = 0.5;
       this.sprite.cursor = "wait";

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, ReactNode } from "react";
-import { Application } from "pixi.js";
+import { Application, Assets } from "pixi.js";
 import { usePixi } from "./contexts/PixiContext";
 
 const PixiApp: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -15,6 +15,9 @@ const PixiApp: React.FC<{ children: ReactNode }> = ({ children }) => {
         height: 900,
         backgroundColor: 0x1099bb,
       });
+
+      // TODO: Better way to load assets
+      await Assets.load(["https://pixijs.com/assets/circle.png"]);
 
       // Only append canvas when app is ready to be initialized
       if (!appRef.current && containerRef.current) {

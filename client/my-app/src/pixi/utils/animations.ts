@@ -1,12 +1,13 @@
 import { Sprite, Application, Container, Ticker } from "pixi.js";
+import { NamedContainer } from "../types";
 
 export const showLoadingCircleSpinner = (
   sprite: Sprite,
-  app: Application
+  app: Application,
+  spriteContainer: NamedContainer
 ): Container => {
   const circleLoadingSpinnerContainer = new Container();
-  const size = Math.min(sprite.width, sprite.height);
-
+  const size = 100;
   const ballAmount = 7;
   const balls: Sprite[] = [];
 
@@ -35,9 +36,9 @@ export const showLoadingCircleSpinner = (
   }
 
   // Position the spinner container at the center of the sprite
-  circleLoadingSpinnerContainer.x = (sprite.width - size) / 2;
-  circleLoadingSpinnerContainer.y = (sprite.height - size) / 2;
-  sprite.addChild(circleLoadingSpinnerContainer);
+  circleLoadingSpinnerContainer.x = spriteContainer.width / 2;
+  circleLoadingSpinnerContainer.y = spriteContainer.height / 2;
+  spriteContainer.addChild(circleLoadingSpinnerContainer);
 
   // Phase represents the current state of the animation. Controls timing and progression of the animation.
   let phase = 0;
@@ -54,7 +55,7 @@ export const showLoadingCircleSpinner = (
       const sin = Math.sin((i / ballAmount) * Math.PI - phase);
       // Set the scale of the ball using a modified sine wave
       // This creates a pulsing effect where balls grow and shrink
-      b.scale.set(Math.abs(Math.pow(sin, 3)) * 0.5 + 0.5);
+      b.scale.set(Math.abs(sin * sin * sin * 0.5) + 0.5);
     });
   };
 
