@@ -116,6 +116,7 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
     }
 
     const newItemSprite = itemSprites[itemSprites.length - 1] as ItemSprite;
+    // TODO: I need to make UI changes to make sure that char sprite is added first before items
     const characterSprite =
       interactiveCharRef.current?.getSprite() as CharacterSprite;
 
