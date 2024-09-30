@@ -116,11 +116,13 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
     }
 
     const newItemSprite = itemSprites[itemSprites.length - 1] as ItemSprite;
+    // TODO: This may need to be better handled, as it's hardcoding the character sprite container
     const characterSprite = fittingRoomContainerRef.current?.children.find(
-      (child) => (child as Sprite).label === "characterSprite"
-    ) as CharacterSprite;
+      (child) => child.label === "characterSpriteContainer"
+    )?.children[0] as CharacterSprite;
 
     if (!characterSprite || !appRef.current) {
+      console.warn("No character sprite or app ref");
       return;
     }
 
