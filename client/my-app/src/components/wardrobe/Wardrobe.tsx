@@ -116,7 +116,8 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
     }
 
     const newItemSprite = itemSprites[itemSprites.length - 1] as ItemSprite;
-    const characterSprite = interactiveCharRef.current?.getSprite();
+    const characterSprite =
+      interactiveCharRef.current?.getSprite() as CharacterSprite;
 
     if (!characterSprite || !appRef.current) {
       console.warn("No character sprite or app ref");
