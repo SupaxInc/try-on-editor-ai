@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import Character from "../../components/character/Character";
+import FittingRoom from "../../components/fittingroom/FittingRoom";
 import { createSpriteFromFile } from "./helper";
 import PixiApp from "../../pixi/PixiApp";
 import Wardrobe from "../../components/wardrobe/Wardrobe";
@@ -48,7 +48,7 @@ const TryonEditor = () => {
       <div className="flex flex-col justify-between items-center flex-grow">
         <div className="w-full flex justify-center p-4">
           <PixiApp>
-            <Character charSprite={charSprite} />
+            <FittingRoom charSprite={charSprite} />
             {showWardrobe && <Wardrobe itemSprites={itemSprites} />}
           </PixiApp>
         </div>

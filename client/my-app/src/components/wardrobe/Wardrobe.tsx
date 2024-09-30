@@ -21,7 +21,7 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
     wardrobeContainerRef,
     appRef,
     itemsContainerRef,
-    charContainerRef,
+    fittingRoomContainerRef,
     interactiveCharRef,
   } = usePixi();
 
@@ -116,7 +116,7 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
     }
 
     const newItemSprite = itemSprites[itemSprites.length - 1] as ItemSprite;
-    const characterSprite = charContainerRef.current?.children.find(
+    const characterSprite = fittingRoomContainerRef.current?.children.find(
       (child) => (child as Sprite).label === "characterSprite"
     ) as CharacterSprite;
 
@@ -176,7 +176,7 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
 
     // Increase total items width to account for new sprites
     totalItemsWidthRef.current += newPositionX;
-  }, [itemSprites, itemsContainerRef, charContainerRef, appRef]);
+  }, [itemSprites, itemsContainerRef, fittingRoomContainerRef, appRef]);
 
   return null; // No DOM output
 };

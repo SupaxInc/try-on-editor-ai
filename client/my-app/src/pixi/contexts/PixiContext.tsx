@@ -10,7 +10,7 @@ import InteractiveSprite from "../classes/InteractiveSprite/InteractiveSprite";
 
 interface PixiContextType {
   appRef: MutableRefObject<Application | null>;
-  charContainerRef: MutableRefObject<Container | null>;
+  fittingRoomContainerRef: MutableRefObject<Container | null>;
   interactiveCharRef: MutableRefObject<InteractiveSprite | null>;
   wardrobeContainerRef: MutableRefObject<Container | null>;
   itemsContainerRef: MutableRefObject<Container | null>;
@@ -32,7 +32,7 @@ interface PixiProviderProps {
 
 export const PixiProvider: React.FC<PixiProviderProps> = ({ children }) => {
   const appRef = useRef<Application>(null);
-  const charContainerRef = useRef<Container>(null);
+  const fittingRoomContainerRef = useRef<Container>(null);
   const wardrobeContainerRef = useRef<Container>(null);
   const itemsContainerRef = useRef<Container>(null);
   const interactiveCharRef = useRef<InteractiveSprite>(null);
@@ -40,7 +40,7 @@ export const PixiProvider: React.FC<PixiProviderProps> = ({ children }) => {
     <PixiContext.Provider
       value={{
         appRef,
-        charContainerRef,
+        fittingRoomContainerRef,
         wardrobeContainerRef,
         itemsContainerRef,
         interactiveCharRef,
