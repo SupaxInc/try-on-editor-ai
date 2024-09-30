@@ -30,7 +30,7 @@ const Character: FC<{ charSprite: Sprite }> = ({ charSprite }) => {
           resizable: false,
         }
       );
-      fittingRoomContainerRef.current.addChild(interactiveChar.getSprite());
+      fittingRoomContainerRef.current.addChild(interactiveChar.getContainer());
       interactiveCharRef.current = interactiveChar;
     }
   }, [charSprite, fittingRoomContainerRef, interactiveCharRef, appRef]);

@@ -75,6 +75,10 @@ export default class InteractiveSprite {
     return this.sprite;
   }
 
+  public getContainer(): NamedContainer {
+    return this.container;
+  }
+
   public setLoading(loading: boolean): void {
     if (loading) {
       this.isLoading = true;

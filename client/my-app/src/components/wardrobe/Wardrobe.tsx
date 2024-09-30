@@ -140,7 +140,7 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
     const newInteractiveItem = new InteractiveSprite(
       newItemSprite,
       appRef.current,
-      "item",
+      "item", // TODO: Make this dynamic based on name of clothing or type of clothing
       {
         resizable: false,
         droppable: true,
@@ -173,7 +173,7 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
       }
     );
 
-    itemsContainerRef.current.addChild(newInteractiveItem.getSprite());
+    itemsContainerRef.current.addChild(newInteractiveItem.getContainer());
 
     // Increase total items width to account for new sprites
     totalItemsWidthRef.current += newPositionX;
