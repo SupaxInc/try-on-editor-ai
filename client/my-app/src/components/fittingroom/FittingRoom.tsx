@@ -1,24 +1,24 @@
 import React, { useEffect, useRef } from "react";
 import { Application, Container, Graphics, Sprite } from "pixi.js";
-import { usePixi } from "../../pixi/contexts/PixiContext";
+import { usePixi } from "../../pixi/contexts/PixiContext.tsx";
 import {
   isOnTopOfSprite,
   onDropResetToInitial,
   onDropOnSpriteTryOn,
 } from "../../pixi/utils/interactions.ts";
-import { scaleSpriteToFitContainer } from "../../pixi/utils/helper";
-import { triggerTryOn } from "../../api";
-import InteractiveSprite from "../../pixi/classes/InteractiveSprite/InteractiveSprite";
+import { scaleSpriteToFitContainer } from "../../pixi/utils/helper.ts";
+import { triggerTryOn } from "../../api.js";
+import InteractiveSprite from "../../pixi/classes/InteractiveSprite/InteractiveSprite.ts";
 import {
   NamedContainer,
   ItemSprite,
   CharacterSprite,
   AllSetupSprites,
-} from "../../pixi/types";
+} from "../../pixi/types.ts";
 
-const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
+const FittingRoom: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
   const {
-    wardrobeContainerRef,
+    fittingRoomContainerRef,
     appRef,
     itemsContainerRef,
     charContainerRef,
@@ -27,10 +27,10 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
 
   const totalItemsWidthRef = useRef<number>(0);
 
-  /* Setting up the Wardrobe and Items Containers */
+  /* Setting up the Fitting Room and Items Containers */
   useEffect(() => {
     // Containers scales its resolution based on its children, so use graphics to create boundaries for wardrobe
-    const setWardrobeBounds = (wardrobeContainer: NamedContainer) => {
+    const setFittingRoomBounds = (fittingRoomContainer: NamedContainer) => {
       if (!appRef.current) return;
 
       const boundary = new Graphics();
@@ -40,23 +40,23 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
       boundary.rect(0, 0, wardrobeWidth, wardrobeHeight);
       boundary.fill({ color: 0x333333 });
 
-      wardrobeContainer.addChild(boundary);
+      fittingRoomContainer.addChild(boundary);
     };
 
-    const setupWardrobeContainer = (): NamedContainer => {
-      const wardrobeContainer = new Container() as NamedContainer;
-      wardrobeContainer.label = "wardrobeContainer";
-      setWardrobeBounds(wardrobeContainer);
-      return wardrobeContainer;
+    const setupFittingRoomContainer = (): NamedContainer => {
+      const fittingRoomContainer = new Container() as NamedContainer;
+      fittingRoomContainer.label = "fittingRoomContainer";
+      setFittingRoomBounds(fittingRoomContainer);
+      return fittingRoomContainer;
     };
 
     // Containers scales its resolution based on its children, so use graphics to create boundaries for items
     const setItemsBounds = (itemsContainer: NamedContainer) => {
-      if (!wardrobeContainerRef.current) return;
+      if (!fittingRoomContainerRef.current) return;
 
       const boundary = new Graphics();
-      const itemsWidth = wardrobeContainerRef.current.width;
-      const itemsHeight = wardrobeContainerRef.current.height * 0.8;
+      const itemsWidth = fittingRoomContainerRef.current.width;
+      const itemsHeight = fittingRoomContainerRef.current.height * 0.8;
 
       boundary.rect(0, 0, itemsWidth, itemsHeight);
       boundary.fill({ color: 0x000000 });
@@ -76,22 +76,22 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
     }
 
     /* Setup Wardrobe container */
-    if (!wardrobeContainerRef.current) {
-      const wardrobeContainer = setupWardrobeContainer();
-      appRef.current.stage.addChild(wardrobeContainer);
-      wardrobeContainerRef.current = wardrobeContainer;
+    if (!fittingRoomContainerRef.current) {
+      const fittingRoomContainer = setupFittingRoomContainer();
+      appRef.current.stage.addChild(fittingRoomContainer);
+      fittingRoomContainerRef.current = fittingRoomContainer;
       // (0,0) origin is top left of canvas, imagine the wardrobe rectangle where origin is top left (0,0)
-      wardrobeContainerRef.current.x = 0; // Position x to start at left of canvas
+      fittingRoomContainerRef.current.x = 0; // Position x to start at left of canvas
 
       // Position y to start at wardrobe height - the app canvas's screen height, so it starts 80% of screen
-      wardrobeContainerRef.current.y =
-        appRef.current.screen.height - wardrobeContainerRef.current.height;
+      fittingRoomContainerRef.current.y =
+        appRef.current.screen.height - fittingRoomContainerRef.current.height;
     }
 
     /* Setup Items Container */
     if (!itemsContainerRef.current) {
       const itemsContainer = setupItemsContainer();
-      wardrobeContainerRef.current.addChild(itemsContainer);
+      fittingRoomContainerRef.current.addChild(itemsContainer);
       itemsContainerRef.current = itemsContainer;
 
       // Position at top left of wardrobe container
@@ -101,15 +101,15 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
 
     return () => {
       // No need to destroy items container or item sprites as its children of wardrobe container
-      if (wardrobeContainerRef.current) {
-        wardrobeContainerRef.current.destroy({ children: true });
-        wardrobeContainerRef.current = null;
+      if (fittingRoomContainerRef.current) {
+        fittingRoomContainerRef.current.destroy({ children: true });
+        fittingRoomContainerRef.current = null;
         itemsContainerRef.current = null;
       }
     };
-  }, [appRef, wardrobeContainerRef, itemsContainerRef]);
+  }, [appRef, fittingRoomContainerRef, itemsContainerRef]);
 
-  /* Setting up Items and Adding Items to the Wardrobe */
+  /* Setting up Items and Adding Items to the Fitting Room */
   useEffect(() => {
     if (!itemsContainerRef.current || itemSprites.length === 0) {
       return;
@@ -181,4 +181,4 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
   return null; // No DOM output
 };
 
-export default Wardrobe;
+export default FittingRoom;
