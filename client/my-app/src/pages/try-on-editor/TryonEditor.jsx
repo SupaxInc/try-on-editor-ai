@@ -3,7 +3,7 @@ import { useState } from "react";
 import Character from "../../components/character/Character";
 import { createSpriteFromFile } from "./helper";
 import PixiApp from "../../pixi/PixiApp";
-import FittingRoom from "../../components/fittingroom/FittingRoom";
+import Wardrobe from "../../components/wardrobe/Wardrobe";
 
 const TryonEditor = () => {
   const [charSprite, setCharSprite] = useState(null);
@@ -49,7 +49,7 @@ const TryonEditor = () => {
         <div className="w-full flex justify-center p-4">
           <PixiApp>
             <Character charSprite={charSprite} />
-            {showWardrobe && <FittingRoom itemSprites={itemSprites} />}
+            {showWardrobe && <Wardrobe itemSprites={itemSprites} />}
           </PixiApp>
         </div>
         {showWardrobe && (
