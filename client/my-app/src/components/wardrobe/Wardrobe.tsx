@@ -164,6 +164,7 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
             interactiveCharRef.current?.setLoading(false);
             return newSprite;
           } catch (error) {
+            console.log("Error onDropOnSpriteTryOn");
             console.error(error);
           } finally {
             interactiveCharRef.current?.setLoading(false);

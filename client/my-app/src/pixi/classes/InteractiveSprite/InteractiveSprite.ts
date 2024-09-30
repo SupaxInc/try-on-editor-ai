@@ -51,6 +51,7 @@ export default class InteractiveSprite {
   }
 
   private initialize(): void {
+    // TODO: Add a boundary here using graphics
     this.container.addChild(this.sprite);
     this.sprite.interactive = true;
     this.activeCorner = null;
@@ -102,7 +103,7 @@ export default class InteractiveSprite {
     let pointerOffsetY: number;
 
     const onDragStart = (event: FederatedPointerEvent): void => {
-      if (this.isResizing) return;
+      if (this.isResizing || this.isLoading) return;
 
       const parent = this.sprite.parent as Container;
       const localPosition = event.getLocalPosition(parent);
@@ -146,6 +147,8 @@ export default class InteractiveSprite {
   // TODO: Fix resizing, cursor not changing and its resizing too big
   private enableResizing(): void {
     const onResizeStart = (event: FederatedPointerEvent): void => {
+      if (this.isLoading) return;
+
       const bounds: Bounds = this.sprite.getBounds();
       const parent = this.sprite.parent as Container;
       const localPosition = event.getLocalPosition(parent);
