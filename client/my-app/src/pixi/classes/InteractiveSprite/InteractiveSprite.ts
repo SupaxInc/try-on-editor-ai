@@ -5,6 +5,7 @@ import {
   Bounds,
   FederatedPointerEvent,
   Application,
+  Graphics,
 } from "pixi.js";
 import { RESIZE_AREA_CORNER, RESIZE_AREA_MIN } from "../../utils/constants";
 import { InteractiveSpriteOptions, ResizeCorner } from "./types";
@@ -29,17 +30,15 @@ export default class InteractiveSprite {
   private loadingSpinnerContainer: Container | null = null;
 
   constructor(
+    container: NamedContainer,
     sprite: AllSetupSprites,
     app: Application,
-    name: string,
     options: InteractiveSpriteOptions = {}
   ) {
-    this.container = new Container() as NamedContainer;
-    this.container.label = `${name.toLowerCase()}SpriteContainer`;
-
+    this.container = container;
     this.sprite = sprite;
-
     this.app = app;
+
     this.options = {
       draggable: true,
       resizable: true,
@@ -51,8 +50,6 @@ export default class InteractiveSprite {
   }
 
   private initialize(): void {
-    // TODO: Add a boundary here using graphics
-    this.container.addChild(this.sprite);
     this.sprite.interactive = true;
     this.activeCorner = null;
     this.isDragging = false;
