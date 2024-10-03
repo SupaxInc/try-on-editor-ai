@@ -37,11 +37,17 @@ export const showLoadingCircleSpinner = (
     balls.push(ball);
   }
 
+  const loadingSpinnerBounds = circleLoadingSpinnerContainer.getLocalBounds();
+
+  // Set the anchor point of the spinner container to (0.5, 0.5)
+  circleLoadingSpinnerContainer.pivot.set(
+    loadingSpinnerBounds.width / 2,
+    loadingSpinnerBounds.height / 2
+  );
+
   // Position the spinner container at the center of the sprite
   circleLoadingSpinnerContainer.x = spriteContainer.width / 2;
   circleLoadingSpinnerContainer.y = spriteContainer.height / 2;
-  // Set the anchor point of the spinner container to (0.5, 0.5)
-  circleLoadingSpinnerContainer.pivot.set(size / 2, size / 2);
   spriteContainer.addChild(circleLoadingSpinnerContainer);
 
   // Phase represents the current state of the animation. Controls timing and progression of the animation.
