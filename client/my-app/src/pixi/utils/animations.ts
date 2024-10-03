@@ -6,7 +6,9 @@ export const showLoadingCircleSpinner = (
   app: Application,
   spriteContainer: NamedContainer
 ): Container => {
-  const circleLoadingSpinnerContainer = new Container();
+  const circleLoadingSpinnerContainer = new Container() as NamedContainer;
+  circleLoadingSpinnerContainer.label = "circleLoadingSpinnerContainer";
+
   const size = 100;
   const ballAmount = 7;
   const balls: Sprite[] = [];
@@ -18,7 +20,7 @@ export const showLoadingCircleSpinner = (
     const ball = Sprite.from("https://pixijs.com/assets/circle.png");
 
     // Set the anchor point to the center of the ball
-    ball.anchor.set(0.5);
+    ball.anchor.set(0.5, 0.5);
 
     // Add the ball to the spinner container
     circleLoadingSpinnerContainer.addChild(ball);
@@ -38,11 +40,13 @@ export const showLoadingCircleSpinner = (
   // Position the spinner container at the center of the sprite
   circleLoadingSpinnerContainer.x = spriteContainer.width / 2;
   circleLoadingSpinnerContainer.y = spriteContainer.height / 2;
+  // Set the anchor point of the spinner container to (0.5, 0.5)
+  circleLoadingSpinnerContainer.pivot.set(size / 2, size / 2);
   spriteContainer.addChild(circleLoadingSpinnerContainer);
 
   // Phase represents the current state of the animation. Controls timing and progression of the animation.
   let phase = 0;
-  // Define the spinner animation function that will be called on each frame
+  // Spinner animation function that will be called on each frame
   const spinnerAnimation = (ticker: Ticker) => {
     // Increment the phase based on the time elapsed since the last frame
     phase += ticker.deltaMS / 1000;

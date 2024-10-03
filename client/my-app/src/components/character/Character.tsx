@@ -64,7 +64,7 @@ const Character: FC<{ charSprite: Sprite }> = ({ charSprite }) => {
     }
 
     scaleSpriteToFitContainer(charSprite, characterContainerRef, 1);
-    // Set the anchor point to the center, default origin is (0,0) which is top left corner
+    // Set the anchor point to the center (0.5, 0.5), default origin is (0,0) which is top left corner
     charSprite.anchor.set(0.5, 0.5);
     charSprite.x = characterContainerRef.current.width / 2;
     charSprite.y = characterContainerRef.current.height / 2;
