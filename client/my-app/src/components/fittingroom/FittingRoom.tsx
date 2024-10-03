@@ -34,9 +34,7 @@ const FittingRoom: FC<{ charSprite: Sprite }> = ({ charSprite }) => {
       const fittingRoomContainer = setupFittingRoomContainer();
       appRef.current.stage.addChild(fittingRoomContainer);
 
-      fittingRoomContainerRef.current = appRef.current.stage.getChildByLabel(
-        "fittingRoomContainer"
-      );
+      fittingRoomContainerRef.current = fittingRoomContainer;
       if (fittingRoomContainerRef.current) {
         // (0,0) origin is top left of canvas, imagine the fitting rectangle where origin is top left (0,0)
         // Position x to left of canvas (parent)
