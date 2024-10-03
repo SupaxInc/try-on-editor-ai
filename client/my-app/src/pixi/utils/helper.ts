@@ -1,5 +1,5 @@
 import { Container, Graphics, Sprite, Texture, Application } from "pixi.js";
-import { AllSetupSprites, ItemSprite } from "../types";
+import { AllSetupSprites, ItemSprite, NamedContainer } from "../types";
 import { MutableRefObject } from "react";
 
 export const drawDebugBounds = (container: Container): void => {
@@ -19,17 +19,18 @@ export const scaleSpriteToFitContainer = (
   if (!containerRef.current) {
     return;
   }
+  const containerBounds = containerRef.current.getLocalBounds();
 
   // Add padding to the container width and height, multiply by 2 to account for top/bottom, left/right sides.
   // Adds padding to container to effectively make container smaller or bigger for better scaling
-  const effectiveWidth = containerRef.current.width - padding * 2;
-  const effectiveHeight = containerRef.current.height - padding * 2;
+  const effectiveWidth = containerBounds.width - padding * 2;
+  const effectiveHeight = containerBounds.height - padding * 2;
 
   // Texture represents original dimensions of the sprite
   // Sprite dimensions (sprite.height, .width) are affected by the sprite's scale properties
   const texture: Texture = sprite.texture;
-  const spriteWidth = texture.width;
-  const spriteHeight = texture.height;
+  const spriteWidth = texture.orig.width;
+  const spriteHeight = texture.orig.height;
 
   const scaleX = effectiveWidth / spriteWidth;
   const scaleY = effectiveHeight / spriteHeight;

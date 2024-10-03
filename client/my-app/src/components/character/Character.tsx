@@ -16,17 +16,19 @@ const Character: FC<{ charSprite: Sprite }> = ({ charSprite }) => {
   useEffect(() => {
     if (!charSprite || !fittingRoomContainerRef.current) return;
 
+    const charWidth = fittingRoomContainerRef.current.width * 0.5; // 50% of parent width
+    const charHeight = fittingRoomContainerRef.current.height * 0.8; // 80% of parent height
+
     const setCharacterBounds = (characterContainer: NamedContainer) => {
+      if (!fittingRoomContainerRef.current) return;
+
       const boundary = new Graphics();
-      const charWidth = charSprite.width;
-      const charHeight = charSprite.height;
       boundary.rect(0, 0, charWidth, charHeight);
       boundary.fill({ color: 0x000000, alpha: 0.2 });
 
       characterContainer.addChild(boundary);
     };
 
-    // Setup the fitting room container
     const setupCharacterContainer = (): NamedContainer => {
       const characterContainer = new Container() as NamedContainer;
       characterContainer.label = "characterContainer";
@@ -37,15 +39,18 @@ const Character: FC<{ charSprite: Sprite }> = ({ charSprite }) => {
 
     if (!characterContainerRef.current) {
       const characterContainer = setupCharacterContainer();
+
+      // Center the character container within the fitting room container
+      characterContainer.x =
+        (fittingRoomContainerRef.current.width - charWidth) / 2;
+      characterContainer.y =
+        (fittingRoomContainerRef.current.height - charHeight) / 2;
+
       fittingRoomContainerRef.current.addChild(characterContainer);
       characterContainerRef.current = characterContainer;
-
-      characterContainerRef.current.x = 0;
-      characterContainerRef.current.y = 0;
     }
 
     return () => {
-      // No need to destroy items container or item sprites as its children of wardrobe container
       if (characterContainerRef.current) {
         characterContainerRef.current.destroy({ children: true });
         characterContainerRef.current = null;
@@ -57,9 +62,13 @@ const Character: FC<{ charSprite: Sprite }> = ({ charSprite }) => {
     if (!characterContainerRef.current || !appRef.current) {
       return;
     }
-    scaleSpriteToFitContainer(charSprite, fittingRoomContainerRef, 50);
-    charSprite.x = characterContainerRef.current.width;
-    charSprite.y = characterContainerRef.current.height;
+
+    scaleSpriteToFitContainer(charSprite, characterContainerRef, 20);
+    // Set the anchor point to the center, default is 0,0 which is top left corner
+    charSprite.anchor.set(0.5, 0.5);
+
+    charSprite.x = characterContainerRef.current.width / 2;
+    charSprite.y = characterContainerRef.current.height / 2;
 
     const interactiveChar = new InteractiveSprite(
       characterContainerRef.current,
@@ -73,7 +82,7 @@ const Character: FC<{ charSprite: Sprite }> = ({ charSprite }) => {
 
     characterContainerRef.current.addChild(interactiveChar.getSprite());
     interactiveCharRef.current = interactiveChar;
-  }, [charSprite, fittingRoomContainerRef, interactiveCharRef, appRef]);
+  }, [charSprite, characterContainerRef, interactiveCharRef, appRef]);
 
   return null; // No DOM output
 };
