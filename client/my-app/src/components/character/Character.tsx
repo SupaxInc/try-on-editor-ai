@@ -63,7 +63,7 @@ const Character: FC<{ charSprite: Sprite }> = ({ charSprite }) => {
       return;
     }
 
-    scaleSpriteToFitContainer(charSprite, characterContainerRef, 20);
+    scaleSpriteToFitContainer(charSprite, characterContainerRef, 1);
     // Set the anchor point to the center, default is 0,0 which is top left corner
     charSprite.anchor.set(0.5, 0.5);
 

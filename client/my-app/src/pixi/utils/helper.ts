@@ -19,6 +19,8 @@ export const scaleSpriteToFitContainer = (
   if (!containerRef.current) {
     return;
   }
+  // getLocalBounds() ensures we're working with dimensions relative to the container itself,
+  // avoiding discrepancies that can arise when using global bounds or direct access to width/height
   const containerBounds = containerRef.current.getLocalBounds();
 
   // Add padding to the container width and height, multiply by 2 to account for top/bottom, left/right sides.
