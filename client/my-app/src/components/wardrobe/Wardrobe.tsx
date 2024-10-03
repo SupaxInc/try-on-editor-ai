@@ -152,7 +152,12 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
           app: Application
         ) => {
           try {
-            interactiveCharRef.current?.setLoading(true);
+            if (!interactiveCharRef.current) {
+              console.warn("No character sprite");
+              return null;
+            }
+
+            interactiveCharRef.current.setLoading(true);
 
             const newSprite = await onDropOnSpriteTryOn(
               characterSprite,
@@ -160,13 +165,11 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
               triggerTryOn,
               app
             );
-            interactiveCharRef.current?.setLoading(false);
+            interactiveCharRef.current.setLoading(false);
             return newSprite;
           } catch (error) {
             console.log("Error onDropOnSpriteTryOn");
             console.error(error);
-          } finally {
-            interactiveCharRef.current?.setLoading(false);
           }
 
           return null;
