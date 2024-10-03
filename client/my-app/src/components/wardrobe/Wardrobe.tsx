@@ -82,7 +82,6 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
       wardrobeContainerRef.current = wardrobeContainer;
       // (0,0) origin is top left of canvas, imagine the wardrobe rectangle where origin is top left (0,0)
       wardrobeContainerRef.current.x = 0; // Position x to start at left of canvas
-
       // Position y to start at wardrobe height - the app canvas's screen height, so it starts 80% of screen
       wardrobeContainerRef.current.y =
         appRef.current.screen.height - wardrobeContainerRef.current.height;
@@ -139,9 +138,9 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
     newItemSprite.initialY = itemsContainerRef.current.height / 2; // Middle of the items container
 
     const newInteractiveItem = new InteractiveSprite(
+      itemsContainerRef.current,
       newItemSprite,
       appRef.current,
-      "item", // TODO: Make this dynamic based on name of clothing or type of clothing
       {
         resizable: false,
         droppable: true,
@@ -175,7 +174,7 @@ const Wardrobe: React.FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
       }
     );
 
-    itemsContainerRef.current.addChild(newInteractiveItem.getContainer());
+    itemsContainerRef.current.addChild(newInteractiveItem.getSprite());
 
     // Increase total items width to account for new sprites
     totalItemsWidthRef.current += newPositionX;
