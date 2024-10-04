@@ -18,7 +18,7 @@ interface PixiContextType {
 
   wardrobeContainerRef: MutableRefObject<NamedContainer | null>;
   itemsContainerRef: MutableRefObject<NamedContainer | null>;
-  itemContainerRef: MutableRefObject<NamedContainer[] | null>;
+  itemContainersRef: MutableRefObject<NamedContainer[] | null>;
 }
 
 const PixiContext = createContext<PixiContextType | undefined>(undefined);
@@ -40,7 +40,7 @@ export const PixiProvider: React.FC<PixiProviderProps> = ({ children }) => {
 
   const wardrobeContainerRef = useRef<NamedContainer>(null);
   const itemsContainerRef = useRef<NamedContainer>(null);
-  const itemContainerRef = useRef<NamedContainer[]>([]);
+  const itemContainersRef = useRef<NamedContainer[]>([]);
 
   const fittingRoomContainerRef = useRef<NamedContainer>(null);
   const characterContainerRef = useRef<NamedContainer>(null);
@@ -54,7 +54,7 @@ export const PixiProvider: React.FC<PixiProviderProps> = ({ children }) => {
         characterContainerRef,
         wardrobeContainerRef,
         itemsContainerRef,
-        itemContainerRef,
+        itemContainersRef,
         interactiveCharRef,
       }}
     >
