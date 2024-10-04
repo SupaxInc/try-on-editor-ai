@@ -37,9 +37,11 @@ export const showLoadingCircleSpinner = (
     balls.push(ball);
   }
 
+  // Using local bounds to ensure we are working with dimensions relative to the container
   const loadingSpinnerBounds = circleLoadingSpinnerContainer.getLocalBounds();
 
-  // Set the anchor point of the spinner container to (0.5, 0.5)
+  // Pivot achieves a similar effect to anchor for a sprite but is used for objects like containers
+  // In this case, it is used to center the point of the loading spinner container rather than its top left corner
   circleLoadingSpinnerContainer.pivot.set(
     loadingSpinnerBounds.width / 2,
     loadingSpinnerBounds.height / 2
