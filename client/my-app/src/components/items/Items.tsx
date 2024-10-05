@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, FC } from "react";
+import React, { useEffect, FC } from "react";
 import { Application, Container, Graphics, Sprite } from "pixi.js";
 import { usePixi } from "../../pixi/contexts/PixiContext";
 import {
@@ -17,65 +17,64 @@ import {
 } from "../../pixi/types";
 
 const Items: FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
-  const { appRef, itemsContainerRef, interactiveCharRef } = usePixi();
+  const { appRef, itemsContainerRef, interactiveCharRef, itemContainersRef } =
+    usePixi();
 
-  const totalItemsWidthRef = useRef<number>(0);
-
-  /* Setting up Items and Adding Items to the Fitting Room */
   useEffect(() => {
-    const setItemContainerBounds = (itemContainer: NamedContainer) => {
-      const desiredWidth = 150; // Adjust as needed
-      const desiredHeight = 150; // Adjust as needed
-      const boundary = new Graphics();
-      boundary.rect(0, 0, desiredWidth, desiredHeight);
-      boundary.fill({ color: 0x000000 });
-
-      itemContainer.addChild(boundary);
-    };
-
-    const setupItemContainer = (
-      index: number,
-      sprite: ItemSprite
-    ): NamedContainer => {
-      const itemContainer = new Container() as NamedContainer;
-      itemContainer.label = `itemContainer_${index}`;
-
-      setItemContainerBounds(itemContainer);
-
-      itemContainer.addChild(sprite);
-
-      return itemContainer;
-    };
-
     if (!itemsContainerRef.current || itemSprites.length === 0) {
       return;
     }
 
-    const newItemSprite = itemSprites[itemSprites.length - 1] as ItemSprite;
-    // TODO: I need to make UI changes to make sure that char sprite is added first before items
+    const index = itemSprites.length - 1;
+    const newItemSprite = itemSprites[index] as ItemSprite;
+
+    const setItemContainerBounds = (itemContainer: NamedContainer) => {
+      const itemWidth = 150;
+      const itemHeight = 150;
+
+      const boundary = new Graphics();
+      boundary.rect(0, 0, itemWidth, itemHeight);
+      boundary.fill({ color: 0x000000 });
+
+      // **Always add boundary to the container first so we can begin to position and control dimensions of container**
+      itemContainer.addChild(boundary);
+    };
+
+    const setupItemContainer = (): NamedContainer => {
+      const itemContainer = new Container() as NamedContainer;
+      itemContainer.label = `itemContainer_${index}`;
+      setItemContainerBounds(itemContainer);
+      return itemContainer;
+    };
+
+    const itemContainer = setupItemContainer();
+
+    scaleSpriteToFitContainer(newItemSprite, itemContainer);
+
+    // Center the item sprite within the item container
+    newItemSprite.anchor.set(0.5, 0.5);
+    newItemSprite.x = itemContainer.width / 2;
+    newItemSprite.y = itemContainer.height / 2;
+    newItemSprite.initialX = newItemSprite.x;
+    newItemSprite.initialY = newItemSprite.y;
+
+    itemContainer.addChild(newItemSprite);
+
+    // Calculate the positions of the item on the items container
+    const itemSpacing = 20;
+    itemContainer.x = index * (itemContainer.width + itemSpacing);
+    itemContainer.y =
+      (itemsContainerRef.current.height - itemContainer.height) / 2;
+
     const characterSprite =
       interactiveCharRef.current?.getSprite() as CharacterSprite;
-
     if (!characterSprite || !appRef.current) {
       console.warn("No character sprite or app ref");
       return;
     }
 
-    // Scale the sprite to container before positioning calculations
-    scaleSpriteToFitContainer(newItemSprite, itemsContainerRef, 15);
-
-    const itemSpacing = 200;
-    const newPositionX =
-      itemSprites.length > 1 ? totalItemsWidthRef.current + itemSpacing : 150;
-    newItemSprite.x = newPositionX;
-    newItemSprite.y = itemsContainerRef.current.height / 2; // Middle of the items container
-
-    // Storing new initialX and initialY properties to sprite object to be used for onDropResetToInitial
-    newItemSprite.initialX = newPositionX;
-    newItemSprite.initialY = itemsContainerRef.current.height / 2; // Middle of the items container
-
     const newInteractiveItem = new InteractiveSprite(
-      itemsContainerRef.current,
+      itemContainer,
       newItemSprite,
       appRef.current,
       {
@@ -114,11 +113,9 @@ const Items: FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
       }
     );
 
-    itemsContainerRef.current.addChild(newInteractiveItem.getSprite());
-
-    // Increase total items width to account for new sprites
-    totalItemsWidthRef.current += newPositionX;
-  }, [itemSprites, itemsContainerRef, appRef]);
+    itemsContainerRef.current.addChild(itemContainer); // Add the item container to the stage
+    itemContainersRef.current.push(newInteractiveItem.getContainer()); // Add the item container to the item containers array
+  }, [itemSprites, itemsContainerRef, itemContainersRef]);
 
   return null;
 };

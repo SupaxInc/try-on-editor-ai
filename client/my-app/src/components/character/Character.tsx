@@ -26,6 +26,7 @@ const Character: FC<{ charSprite: Sprite }> = ({ charSprite }) => {
       boundary.rect(0, 0, charWidth, charHeight);
       boundary.fill({ color: 0x000000, alpha: 0 });
 
+      // **Always add boundary to the container first so we can begin to position and control dimensions of container**
       characterContainer.addChild(boundary);
     };
 
