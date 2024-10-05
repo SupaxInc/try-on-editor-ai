@@ -13,15 +13,15 @@ export const drawDebugBounds = (container: Container): void => {
 // TODO: Possibly add responsive scaling?
 export const scaleSpriteToFitContainer = (
   sprite: Sprite,
-  containerRef: MutableRefObject<Container | null>,
+  container: NamedContainer,
   padding: number = 0
 ): void => {
-  if (!containerRef.current) {
+  if (!container) {
     return;
   }
   // getLocalBounds() ensures we're working with dimensions relative to the container itself,
   // avoiding discrepancies that can arise when using global bounds or direct access to width/height
-  const containerBounds = containerRef.current.getLocalBounds();
+  const containerBounds = container.getLocalBounds();
 
   // Add padding to the container width and height, multiply by 2 to account for top/bottom, left/right sides.
   // Adds padding to container to effectively make container smaller or bigger for better scaling

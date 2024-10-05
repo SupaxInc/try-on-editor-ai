@@ -26,6 +26,7 @@ const Character: FC<{ charSprite: Sprite }> = ({ charSprite }) => {
       boundary.rect(0, 0, charWidth, charHeight);
       boundary.fill({ color: 0x000000, alpha: 0 });
 
+      // **Always add boundary to the container first so we can begin to position and control dimensions of container**
       characterContainer.addChild(boundary);
     };
 
@@ -63,7 +64,7 @@ const Character: FC<{ charSprite: Sprite }> = ({ charSprite }) => {
       return;
     }
 
-    scaleSpriteToFitContainer(charSprite, characterContainerRef, 1);
+    scaleSpriteToFitContainer(charSprite, characterContainerRef.current, 1);
     // Set the anchor point to the center (0.5, 0.5), default origin is (0,0) which is top left corner
     charSprite.anchor.set(0.5, 0.5);
     charSprite.x = characterContainerRef.current.width / 2;
