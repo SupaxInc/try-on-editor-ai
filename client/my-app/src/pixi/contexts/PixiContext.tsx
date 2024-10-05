@@ -5,7 +5,7 @@ import React, {
   ReactNode,
   MutableRefObject,
 } from "react";
-import { Application, Container } from "pixi.js";
+import { Application } from "pixi.js";
 import InteractiveSprite from "../classes/InteractiveSprite/InteractiveSprite";
 import { NamedContainer } from "../types";
 
@@ -18,7 +18,7 @@ interface PixiContextType {
 
   wardrobeContainerRef: MutableRefObject<NamedContainer | null>;
   itemsContainerRef: MutableRefObject<NamedContainer | null>;
-  itemContainersRef: MutableRefObject<NamedContainer[] | null>;
+  itemContainersRef: MutableRefObject<NamedContainer[]>;
 }
 
 const PixiContext = createContext<PixiContextType | undefined>(undefined);
@@ -38,13 +38,13 @@ interface PixiProviderProps {
 export const PixiProvider: React.FC<PixiProviderProps> = ({ children }) => {
   const appRef = useRef<Application>(null);
 
-  const wardrobeContainerRef = useRef<NamedContainer>(null);
-  const itemsContainerRef = useRef<NamedContainer>(null);
-  const itemContainersRef = useRef<NamedContainer[]>([]);
-
   const fittingRoomContainerRef = useRef<NamedContainer>(null);
   const characterContainerRef = useRef<NamedContainer>(null);
   const interactiveCharRef = useRef<InteractiveSprite>(null);
+
+  const wardrobeContainerRef = useRef<NamedContainer>(null);
+  const itemsContainerRef = useRef<NamedContainer>(null);
+  const itemContainersRef = useRef<NamedContainer[]>([]);
 
   return (
     <PixiContext.Provider
