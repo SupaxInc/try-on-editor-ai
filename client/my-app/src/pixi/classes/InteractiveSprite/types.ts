@@ -10,7 +10,7 @@ export interface InteractiveSpriteOptions {
   resizable?: boolean;
   droppable?: boolean;
   isOnTopOfSprite?: typeof isOnTopOfSprite;
-  targetSprite?: AllSetupSprites;
+  targetSpriteGetter?: () => AllSetupSprites | null;
   onDropOnSprite?: (
     sprite: AllSetupSprites,
     app: Application

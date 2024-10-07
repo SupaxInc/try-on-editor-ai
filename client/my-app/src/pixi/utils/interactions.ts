@@ -9,11 +9,11 @@ export const onDropResetToInitial = (sprite: ItemSprite): void => {
 
 // Check if the current position passed is on top of a specific sprite
 export const isOnTopOfSprite = (
-  sprite: Sprite | null,
+  sprite: AllSetupSprites | null,
   currentPosition: { x: number; y: number }
 ): boolean => {
   if (!sprite) return false;
-
+  console.log("sprite", sprite);
   const spriteBounds = sprite.getBounds();
   return spriteBounds.containsPoint(currentPosition.x, currentPosition.y);
 };
@@ -31,6 +31,7 @@ export const onDropOnSpriteTryOn = async (
   if (targetSprite && droppedSprite) {
     // Delay the callback to ensure the sprite has been updated with correct states
     await new Promise((resolve) => setTimeout(resolve, 0));
+
     const newSprite = await triggerTryOn(targetSprite, droppedSprite, app);
     if (newSprite) {
       // Copy properties from targetSprite to newSprite
@@ -39,18 +40,14 @@ export const onDropOnSpriteTryOn = async (
       newSprite.width = targetSprite.width;
       newSprite.height = targetSprite.height;
       newSprite.anchor.set(targetSprite.anchor.x, targetSprite.anchor.y);
-      (newSprite as any).label = (targetSprite as any).label;
 
       // Remove the old sprite and add the new one
       const parent = targetSprite.parent as Container;
       const index = parent.getChildIndex(targetSprite);
-      parent.removeChild(targetSprite);
-      parent.addChildAt(newSprite, index);
-
-      // Make the new sprite interactive
-      // makeSpriteInteractive(newSprite, {
-      //   // Add any necessary options here
-      // });
+      console.log("parent", parent);
+      console.log("index", index);
+      parent.removeChild(targetSprite); // Remove old sprite from parent character container
+      parent.addChildAt(newSprite, index); // Add new sprite to the parent container in the same index
 
       return newSprite;
     }

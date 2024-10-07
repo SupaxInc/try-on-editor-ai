@@ -17,8 +17,13 @@ import {
 } from "../../pixi/types";
 
 const Items: FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
-  const { appRef, itemsContainerRef, interactiveCharRef, itemContainersRef } =
-    usePixi();
+  const {
+    appRef,
+    itemsContainerRef,
+    interactiveCharRef,
+    itemContainersRef,
+    characterContainerRef,
+  } = usePixi();
 
   useEffect(() => {
     if (!itemsContainerRef.current || itemSprites.length === 0) {
@@ -82,27 +87,40 @@ const Items: FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
         droppable: true,
         onDropResetToInitial,
         isOnTopOfSprite,
-        targetSprite: characterSprite,
+        targetSpriteGetter: () =>
+          interactiveCharRef.current?.getSprite() as CharacterSprite,
         onDropOnSprite: async (
           droppedSprite: AllSetupSprites,
           app: Application
         ) => {
           try {
-            if (!interactiveCharRef.current) {
+            if (!interactiveCharRef.current || !characterContainerRef.current) {
               console.warn("No character sprite");
               return null;
             }
 
-            interactiveCharRef.current.setLoading(true);
+            if (!appRef.current) {
+              console.warn("Pixi Application is not initialized");
+              return null;
+            }
 
-            const newSprite = await onDropOnSpriteTryOn(
-              characterSprite,
+            interactiveCharRef.current.setLoading(true);
+            console.log("characterSprite", characterSprite);
+
+            const newCharSprite = await onDropOnSpriteTryOn(
+              interactiveCharRef.current.getSprite() as CharacterSprite,
               droppedSprite,
               triggerTryOn,
               app
             );
             interactiveCharRef.current.setLoading(false);
-            return newSprite;
+
+            // Ensure to set the new character sprite to the current instance of InteractiveSprite
+            interactiveCharRef.current.setNewSprite(
+              newCharSprite as CharacterSprite
+            );
+
+            return newCharSprite;
           } catch (error) {
             console.log("Error onDropOnSpriteTryOn");
             console.error(error);

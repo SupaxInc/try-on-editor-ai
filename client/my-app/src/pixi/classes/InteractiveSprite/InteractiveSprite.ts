@@ -74,6 +74,7 @@ export default class InteractiveSprite {
   }
 
   public setNewSprite(sprite: AllSetupSprites): void {
+    console.log("setNewSprite", sprite);
     this.sprite = sprite;
     // TODO: Add a better way to re-initialize the sprite
     // We need to change the reference of the sprite ACROSS ALL interactions and animations, EVERYWHERE
@@ -218,13 +219,15 @@ export default class InteractiveSprite {
     const onDrop = (event: FederatedPointerEvent): void => {
       const globalPosition = event.global;
       console.log(this.options);
-      if (this.options.isOnTopOfSprite && this.options.targetSprite) {
-        if (
-          this.options.isOnTopOfSprite(
-            this.options.targetSprite,
-            globalPosition
-          )
-        ) {
+      if (this.options.isOnTopOfSprite && this.options.targetSpriteGetter) {
+        const targetSprite = this.options.targetSpriteGetter();
+        console.log("here1");
+        console.log(
+          "isOnTopOfSprite",
+          this.options.isOnTopOfSprite(targetSprite, globalPosition)
+        );
+        if (this.options.isOnTopOfSprite(targetSprite, globalPosition)) {
+          console.log("here2");
           this.options.onDropOnSprite?.(this.sprite, this.app);
         }
       }
