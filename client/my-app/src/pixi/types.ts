@@ -9,7 +9,7 @@ export type ItemSprite = Sprite & {
 
 // Custom type for for character sprite that has been setup
 export type CharacterSprite = Sprite & {
-  label: number;
+  label: string;
 };
 
 export type AllSetupSprites = ItemSprite | CharacterSprite;

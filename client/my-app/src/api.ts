@@ -1,17 +1,33 @@
 import axios from "axios";
-import { Sprite, Texture } from "pixi.js";
+import { Application, Sprite, Texture } from "pixi.js";
 import { getBase64FromSprite } from "./pages/try-on-editor/helper";
+import { CharacterSprite, ItemSprite } from "./pixi/types";
 
 const API_BASE_URL = "http://localhost:3001";
 
+interface TryOnResponse {
+  jobId: string;
+}
+
+interface JobResponse {
+  status: "pending" | "completed";
+  result?: string;
+}
+
 // TODO: Think of ways to increase performance here, maybe cache avatar/items or save avatar states in the DB
-export const triggerTryOn = async (charSprite, itemSprite, pixiApp) => {
+export const triggerTryOn = async (
+  charSprite: CharacterSprite,
+  itemSprite: ItemSprite,
+  pixiApp: Application
+): Promise<Sprite> => {
   try {
     // Force the renderer to update
     pixiApp.renderer.render(pixiApp.stage);
 
     // Wait for the next animation frame to ensure rendering is complete
-    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await new Promise<void>((resolve) =>
+      requestAnimationFrame(() => resolve())
+    );
 
     const charBase64 = await getBase64FromSprite(charSprite, pixiApp);
     const itemBase64 = await getBase64FromSprite(itemSprite, pixiApp);
@@ -21,9 +37,13 @@ export const triggerTryOn = async (charSprite, itemSprite, pixiApp) => {
       clothing: itemBase64,
     };
 
-    const response = await axios.post(`${API_BASE_URL}/try-on`, data, {
-      headers: { "Content-Type": "application/json" },
-    });
+    const response = await axios.post<TryOnResponse>(
+      `${API_BASE_URL}/try-on`,
+      data,
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
 
     const { jobId } = response.data;
 
@@ -36,8 +56,8 @@ export const triggerTryOn = async (charSprite, itemSprite, pixiApp) => {
     //document.body.appendChild(img); // Append the image to the body for testing
 
     // Wait for the image to load
-    await new Promise((resolve, reject) => {
-      img.onload = resolve;
+    await new Promise<void>((resolve, reject) => {
+      img.onload = () => resolve();
       img.onerror = (e) => {
         console.error("Image failed to load:", e);
         reject(e);
@@ -59,22 +79,24 @@ export const triggerTryOn = async (charSprite, itemSprite, pixiApp) => {
 };
 
 // TODO: Maybe change this to a websocket/sse/long polling or just buy a better GPU lol
-const pollJobResult = async (jobId) => {
+const pollJobResult = async (jobId: string): Promise<string> => {
   const maxAttempts = 90;
   const pollInterval = 2000;
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     try {
-      const response = await axios.get(`${API_BASE_URL}/job/${jobId}`);
+      const response = await axios.get<JobResponse>(
+        `${API_BASE_URL}/job/${jobId}`
+      );
       const { status, result } = response.data;
 
-      if (status === "completed") {
+      if (status === "completed" && result) {
         console.log("Got result during polling. Success!");
         return result;
       }
 
       // If job is still pending, wait before next poll
-      await new Promise((resolve) => setTimeout(resolve, pollInterval));
+      await new Promise<void>((resolve) => setTimeout(resolve, pollInterval));
     } catch (error) {
       console.error("Error polling job result:", error);
       throw error;

@@ -108,7 +108,7 @@ const Items: FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
 
             const newCharSprite = await onDropOnSpriteTryOn(
               interactiveCharRef.current.getSprite() as CharacterSprite,
-              droppedSprite,
+              droppedSprite as ItemSprite,
               triggerTryOn,
               app
             );
