@@ -5,7 +5,6 @@ import {
   Bounds,
   FederatedPointerEvent,
   Application,
-  Graphics,
 } from "pixi.js";
 import { RESIZE_AREA_CORNER, RESIZE_AREA_MIN } from "../../utils/constants";
 import { InteractiveSpriteOptions, ResizeCorner } from "./types";
@@ -107,7 +106,7 @@ export default class InteractiveSprite {
     const onDragStart = (event: FederatedPointerEvent): void => {
       if (this.isResizing || this.isLoading) return;
 
-      const parent = this.sprite.parent as Container;
+      const parent = this.container;
       const localPosition = event.getLocalPosition(parent);
 
       pointerOffsetX = localPosition.x - this.sprite.x;
@@ -120,7 +119,7 @@ export default class InteractiveSprite {
 
     const onDragMove = (event: FederatedPointerEvent): void => {
       if (this.isDragging) {
-        const parent = this.sprite.parent as Container;
+        const parent = this.container;
         const newPosition = event.getLocalPosition(parent);
 
         this.sprite.x = newPosition.x - pointerOffsetX;
@@ -152,7 +151,7 @@ export default class InteractiveSprite {
       if (this.isLoading) return;
 
       const bounds: Bounds = this.sprite.getBounds();
-      const parent = this.sprite.parent as Container;
+      const parent = this.container;
       const localPosition = event.getLocalPosition(parent);
 
       if (
@@ -192,7 +191,7 @@ export default class InteractiveSprite {
 
     const onResizeMove = (event: FederatedPointerEvent): void => {
       if (this.isResizing) {
-        const parent = this.sprite.parent as Container;
+        const parent = this.container;
         const newPosition = event.getLocalPosition(parent);
         this.resizeSprite(newPosition, this.activeCorner);
       }
