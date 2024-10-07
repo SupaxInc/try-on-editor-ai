@@ -1,5 +1,5 @@
 import { Sprite, Container, Application, Ticker } from "pixi.js";
-import { AllSetupSprites, ItemSprite } from "../types";
+import { AllSetupSprites, CharacterSprite, ItemSprite } from "../types";
 
 // Reset sprite to initial position when dropped
 export const onDropResetToInitial = (sprite: ItemSprite): void => {
@@ -18,11 +18,11 @@ export const isOnTopOfSprite = (
 };
 
 export const onDropOnSpriteTryOn = async (
-  targetSprite: AllSetupSprites,
-  droppedSprite: AllSetupSprites,
+  targetSprite: CharacterSprite,
+  droppedSprite: ItemSprite,
   triggerTryOn: (
-    targetSprite: AllSetupSprites,
-    droppedSprite: AllSetupSprites,
+    targetSprite: CharacterSprite,
+    droppedSprite: ItemSprite,
     app: Application
   ) => Promise<Sprite | null>,
   app: Application
