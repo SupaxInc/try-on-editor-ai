@@ -7,6 +7,12 @@ const API_BASE_URL = "http://localhost:3001";
 // TODO: Think of ways to increase performance here, maybe cache avatar/items or save avatar states in the DB
 export const triggerTryOn = async (charSprite, itemSprite, pixiApp) => {
   try {
+    // Force the renderer to update
+    pixiApp.renderer.render(pixiApp.stage);
+
+    // Wait for the next animation frame to ensure rendering is complete
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
     const charBase64 = await getBase64FromSprite(charSprite, pixiApp);
     const itemBase64 = await getBase64FromSprite(itemSprite, pixiApp);
 

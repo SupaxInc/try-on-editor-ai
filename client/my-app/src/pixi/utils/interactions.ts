@@ -28,9 +28,6 @@ export const onDropOnSpriteTryOn = async (
   app: Application
 ): Promise<Sprite | null> => {
   if (targetSprite && droppedSprite) {
-    // Delay the callback to ensure the sprite has been updated with correct states
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
     const newSprite = await triggerTryOn(targetSprite, droppedSprite, app);
     if (newSprite) {
       // Copy properties from targetSprite to newSprite

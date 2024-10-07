@@ -62,10 +62,6 @@ export default class InteractiveSprite {
     if (this.options.resizable) {
       this.enableResizing();
     }
-
-    if (this.options.droppable) {
-      this.enableDropping();
-    }
   }
 
   public getSprite(): Sprite {
@@ -132,6 +128,19 @@ export default class InteractiveSprite {
         this.isDragging = false;
         this.sprite.alpha = 1;
         this.sprite.cursor = "pointer";
+
+        const globalPosition = event.global;
+        if (
+          this.options.droppable &&
+          this.options.isOnTopOfSprite &&
+          this.options.targetSpriteGetter
+        ) {
+          const targetSprite = this.options.targetSpriteGetter();
+
+          if (this.options.isOnTopOfSprite(targetSprite, globalPosition)) {
+            this.options.onDropOnSprite?.(this.sprite, this.app);
+          }
+        }
 
         if (this.options.onDropResetToInitial && isItemSprite(this.sprite)) {
           this.options.onDropResetToInitial?.(this.sprite);
@@ -209,21 +218,6 @@ export default class InteractiveSprite {
     this.sprite.on("pointermove", onResizeMove);
     this.sprite.on("pointerup", onResizeEnd);
     this.sprite.on("pointerupoutside", onResizeEnd);
-  }
-
-  private enableDropping(): void {
-    const onDrop = (event: FederatedPointerEvent): void => {
-      const globalPosition = event.global;
-      if (this.options.isOnTopOfSprite && this.options.targetSpriteGetter) {
-        const targetSprite = this.options.targetSpriteGetter();
-
-        if (this.options.isOnTopOfSprite(targetSprite, globalPosition)) {
-          this.options.onDropOnSprite?.(this.sprite, this.app);
-        }
-      }
-    };
-
-    this.sprite.on("pointerup", onDrop);
   }
 
   /**
