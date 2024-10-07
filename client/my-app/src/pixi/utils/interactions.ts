@@ -13,7 +13,6 @@ export const isOnTopOfSprite = (
   currentPosition: { x: number; y: number }
 ): boolean => {
   if (!sprite) return false;
-  console.log("sprite", sprite);
   const spriteBounds = sprite.getBounds();
   return spriteBounds.containsPoint(currentPosition.x, currentPosition.y);
 };
@@ -44,8 +43,6 @@ export const onDropOnSpriteTryOn = async (
       // Remove the old sprite and add the new one
       const parent = targetSprite.parent as Container;
       const index = parent.getChildIndex(targetSprite);
-      console.log("parent", parent);
-      console.log("index", index);
       parent.removeChild(targetSprite); // Remove old sprite from parent character container
       parent.addChildAt(newSprite, index); // Add new sprite to the parent container in the same index
 

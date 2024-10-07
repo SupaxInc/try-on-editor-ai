@@ -105,7 +105,6 @@ const Items: FC<{ itemSprites: Sprite[] }> = ({ itemSprites }) => {
             }
 
             interactiveCharRef.current.setLoading(true);
-            console.log("characterSprite", characterSprite);
 
             const newCharSprite = await onDropOnSpriteTryOn(
               interactiveCharRef.current.getSprite() as CharacterSprite,

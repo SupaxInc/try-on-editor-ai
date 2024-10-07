@@ -10,6 +10,7 @@ export interface InteractiveSpriteOptions {
   resizable?: boolean;
   droppable?: boolean;
   isOnTopOfSprite?: typeof isOnTopOfSprite;
+  // **Getter function so that the target sprite can be dynamically retrieved and reference is no longer stale if it changes**
   targetSpriteGetter?: () => AllSetupSprites | null;
   onDropOnSprite?: (
     sprite: AllSetupSprites,
