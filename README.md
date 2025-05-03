@@ -1,5 +1,7 @@
 # try-on-editor-ai
 
+Still a work in progress, version 2 will be more private :)!
+
 # Starting Local Environment
 
 To start the local environment, follow these steps:
